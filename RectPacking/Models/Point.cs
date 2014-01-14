@@ -13,6 +13,11 @@ namespace RectPacking.Models
         public string Name { get; set; }
         public bool IsMain { get; set; }
         public bool IsValid { get; set; }
+
+        public Point()
+        {
+        }
+
         public Point(int X, int Y, bool IsMain)
         {
             this.Name = Name;

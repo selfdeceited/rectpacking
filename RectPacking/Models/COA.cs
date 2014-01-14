@@ -3,35 +3,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RectPacking.Models;
 
 namespace RectPacking.Models
 {
     public class COA
     {
         public Product Product { get; set; }
-        public Point Point { get; set; }
-        public string Corner { get; set; }
-        public bool IsRotated { get; set; }
-        public bool IsValid { get; set; }
-        public COA(Product Product, Point Point, string Corner, bool IsRotated)
+        public Point MainPoint { get; set; }
+        public List<Point> Points { get; set; }
+
+        public enum CornerType
         {
-            this.Product = Product;
-            this.Point = Point;
-            this.Corner = Corner;
-            this.IsRotated = IsRotated;
-            this.IsValid = Product != null && Point != null && Point.IsMain ;
+            TopRight, TopLeft, DownRight, DownLeft
         }
 
-        public static List<COA> ToPack(Product Product, Point Point)
+        public CornerType Corner { get; set; }
+        public bool IsRotated { get; set; }
+        public bool IsValid { get; set; }
+        public COA(Product Product, Point MainPoint, CornerType CornerType, bool IsRotated)
         {
-            var list = new List<COA>();
-            var corners = new[] {"TopRight", "TopLeft", "DownRight", "DownLeft"};
+            this.Product = Product;
+            this.MainPoint = MainPoint;
+            this.Corner = CornerType;
+            this.IsRotated = IsRotated;
+            this.IsValid = Product != null && MainPoint != null && MainPoint.IsMain;
+            this.Points = CalculatePoints(CornerType, MainPoint, Product);
+        }
+
+        public static void ToPack(Product Product, Point Point, ref List<COA> list)
+        {
+            var corners = (CornerType[])Enum.GetValues(typeof (CornerType));
             foreach (var corner in corners)
             {
-                list.Add(new COA(Product, Point, corner, false));
+                //TODO: refactor!
+                list.Add(new COA(Product, Point, corner, false)); 
                 list.Add(new COA(Product, Point, corner, true));
             }
-            return list;
+        }
+
+        public List<Point> CalculatePoints(CornerType CornerType, Point MainPoint, Product Product)
+        {
+            var points = new List<Point>();
+            points.Add(MainPoint);
+            var corner = CornerType.ToString();
+            var oppositeX = corner.Contains("Left") ? MainPoint.X + Product.Width : MainPoint.X - Product.Width;
+            var oppositeY = corner.Contains("Top") ? MainPoint.Y + Product.Height : MainPoint.Y - Product.Height;
+            points.Add(new Point(MainPoint.X, oppositeY, false));
+            points.Add(new Point(oppositeX, MainPoint.Y, false));
+            points.Add(new Point(oppositeX, oppositeY, false));
+
+            return points;
         }
 
         public void Place()

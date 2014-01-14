@@ -36,8 +36,35 @@ namespace RectPacking.Tests
         {
             var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
-            placement.CreateCOAs();
+            var points = new List<Point> {new Point(50, 50, true)};
+            placement.CreateCOAsForPoints(points, false);
+
+            Assert.NotNull(placement.COAs);
+            const int numberOfCOAs = 16;
+            Assert.AreEqual(placement.COAs.Count, numberOfCOAs);         // 8 positions * 2 products = 32
+            Assert.AreEqual(placement.COAs.Count(coa => coa.IsValid), numberOfCOAs); //all are valid
+            
+            Assert.AreEqual(placement.COAs.Count(coa => coa.IsRotated), numberOfCOAs / 2); //half of them are rotated
+            Assert.AreEqual(placement.COAs.Count(coa => coa.Product.Name == "Sample 1"), numberOfCOAs / 2); //half of them are of Sample 1
+            Assert.AreEqual(placement.COAs.Count(coa => coa.Product.Name == "Sample 2"), numberOfCOAs / 2); //half of them are of Sample 2
+            Assert.AreEqual(placement.COAs.Count(coa => coa.Corner == COA.CornerType.TopLeft), numberOfCOAs / 4); //each fourth has the main point in top left corner
+            Assert.AreEqual(placement.COAs.Count(coa => coa.Corner == COA.CornerType.TopLeft), numberOfCOAs / 4); //in top right corner
+            Assert.AreEqual(placement.COAs.Count(coa => coa.Corner == COA.CornerType.DownLeft), numberOfCOAs / 4); //down left corner
+            Assert.AreEqual(placement.COAs.Count(coa => coa.Corner == COA.CornerType.DownRight), numberOfCOAs / 4); //down right corner
+            //now some of the COAs as is
+            Assert.AreEqual(placement.COAs.First().Corner, COA.CornerType.TopRight);
+            Assert.False(placement.COAs.First().IsRotated);
+
         }
+
+        [Test]
+        public void CorrectCOACollisionWithTable()
+        {
+            var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
+                new List<Product>{new Product("Sample 3", 350, 50)});
+            placement.CreateCOAsForPoints();
+        }
+
         [Test]
         public void ProceedPlacement()
         {

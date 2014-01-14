@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using RectPacking.Models;
 namespace RectPacking.Tests
@@ -85,19 +86,19 @@ namespace RectPacking.Tests
             //to create COA, you need a main point
             var stair = new Product("Stair", 100, 200);
             var notMainPoint = new Point(10, 10, false);
-            var invalidCOA = new COA(stair, notMainPoint, "TopRight", true); //product, corner, is rotated
+            var invalidCOA = new COA(stair, notMainPoint, COA.CornerType.TopRight, true); //product, corner, is rotated
             Assert.False(invalidCOA.IsValid);
 
             var mainPoint = new Point(10, 10, true);
-            var validCOA = new COA(stair, mainPoint, "TopRight", true);
+            var validCOA = new COA(stair, mainPoint, COA.CornerType.TopRight, true);
             Assert.True(validCOA.IsValid);
-
-            var coaPack = COA.ToPack(stair, mainPoint);
-            foreach (var coa in coaPack)
-            {
+            var COAs = new List<COA>();
+            COA.ToPack(stair, mainPoint, ref COAs);
+            foreach (var coa in COAs)
                 Assert.True(coa.IsValid);
-            }
-            Assert.AreEqual(coaPack.Count, 8);
+
+            Assert.AreEqual(COAs.Count, 8);
+            //  TODO: MORE THOROUGH TESTS
         }
     }
 }

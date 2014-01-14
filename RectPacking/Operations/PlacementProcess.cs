@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RectPacking.Models;
+using RectPacking.Helpers;
 
 namespace RectPacking.Operations
 {
@@ -15,6 +16,7 @@ namespace RectPacking.Operations
         public List<Point> MainPoints { get; set; }
         public List<Bound> Bounds { get; set; }
         public string ProcessState { get; set; }
+        public List<COA> COAs { get; set; }
 
         public PlacementProcess(VibroTable vibroTable, List<Product> productList )
         {
@@ -24,6 +26,7 @@ namespace RectPacking.Operations
             this.Points = new List<Point>();
             this.MainPoints = new List<Point>();
             this.Bounds = new List<Bound>();
+            this.COAs = new List<COA>();
             this.CreateInitialMainPoints(vibroTable);
             this.CreateInitialBounds(vibroTable);
         }
@@ -41,14 +44,8 @@ namespace RectPacking.Operations
             //do stuff
         }
 
-        public void CreateCOAs()
-        {
-
-        }
-
         public void Proceed()
         {
-            CreateCOAs();
             var newPoints = this.MainPoints;
             while (ResumePlacement())
             {
@@ -66,13 +63,26 @@ namespace RectPacking.Operations
             return false;
         }
 
-        public void CreateCOAsForPoints(List<Point> points)
+        public void CreateCOAsForPoints(List<Point> points = null, bool withConstrains = true)
         {
-
+            if (points == null) 
+                points = this.MainPoints;
+            List<COA> list = this.COAs;
+            foreach (var point in points)//because points can differ
+            {
+                foreach (var product in this.ProductList)
+                {
+                    COA.ToPack(product, point, ref list);
+                }
+            }
+            if (withConstrains)
+                this.COAs = Filters.FilterCOAs(this);
+            this.COAs = list;
         }
+
         public COA ChooseBestCOA()
         {
-            return new COA(new Product("1", 1, 1), new Point(1, 1, true), "TopLeft", false);
+            return new COA(new Product("1", 1, 1), new Point(1, 1, true), COA.CornerType.TopLeft, false);
         }
         public void ManageBoundsFor(COA best)
         {

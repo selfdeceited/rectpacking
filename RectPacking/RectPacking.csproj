@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Filters.cs" />
     <Compile Include="Models\Bound.cs" />
     <Compile Include="Models\COA.cs" />
     <Compile Include="Models\Point.cs" />
