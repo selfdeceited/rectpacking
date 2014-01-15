@@ -3,23 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace RectPacking.Models
 {
     public class Product
     {
+        public int Identifier { get; set; }
+        private static int identityCount;
+
         public int Width { get; set; }
         public int Height { get; set; }
         public string Name { get; set; }
         public long Area { get; set; }
         public bool IsValid { get; set; }
-        public Product(string Name, int Width, int Height)
+        public Product(string Name, int Width, int Height, bool increaseIdentity = true)
         {
             this.Name = Name;
             this.Width = Width;
             this.Height = Height;
             this.Area = Width * Height;
             this.IsValid = Width > 0 && Height > 0;
+            this.Identifier = increaseIdentity ? ++identityCount : identityCount;
+        }
+        public Product(int Width, int Height, bool increaseIdentity = true)
+        {
+            //todo: REFACTOR (WITHOUT USING DUBLICATES)
+            this.Name = "";
+            this.Width = Width;
+            this.Height = Height;
+            this.Area = Width * Height;
+            this.IsValid = Width > 0 && Height > 0;
+            this.Identifier = increaseIdentity ? ++identityCount : identityCount;
+        }
+
+        private Product()
+        {
         }
 
         public bool CanContainIn(VibroTable vibroTable)
@@ -49,6 +68,27 @@ namespace RectPacking.Models
         public bool IsBiggerThan(int Width, int Height)
         {
             return this.Width > Width || this.Height > Height;
+        }
+
+        public Product Dublicate()
+        {
+            return new Product
+            {
+                Width = this.Width,
+                Height = this.Height,
+                Area = this.Width * this.Height,
+                Identifier = this.Identifier,
+                IsValid = this.IsValid,
+                Name = this.Name
+                
+            };
+        }
+
+        public static List<Product> RemoveFromListWithId(int id, List<Product> list)
+        {
+            var productToDelete = list.Find(p => p.Identifier == id);
+            list.Remove(productToDelete);
+            return list;
         }
     }
 }

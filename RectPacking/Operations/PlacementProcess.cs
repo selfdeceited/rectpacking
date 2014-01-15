@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 using RectPacking.Models;
 using RectPacking.Helpers;
 
@@ -12,23 +13,21 @@ namespace RectPacking.Operations
     {
         public VibroTable VibroTable { get; set; }
         public List<Product> ProductList { get; set; }
-        public List<Point> Points { get; set; }
         public List<Point> MainPoints { get; set; }
-        public List<Bound> Bounds { get; set; }
         public string ProcessState { get; set; }
         public List<COA> COAs { get; set; }
+        public List<COA> PlacedCOAs { get; set; }
 
         public PlacementProcess(VibroTable vibroTable, List<Product> productList )
         {
             this.VibroTable = vibroTable;
             this.ProductList = productList;
-            this.ProcessState = "Initialized";
-            this.Points = new List<Point>();
+            this.ProcessState = "Initialized";//todo: work through watching state like that
+            //can be added event handlers everytime process state is changed to perform logs
             this.MainPoints = new List<Point>();
-            this.Bounds = new List<Bound>();
             this.COAs = new List<COA>();
+            this.PlacedCOAs = new List<COA>();
             this.CreateInitialMainPoints(vibroTable);
-            this.CreateInitialBounds(vibroTable);
         }
 
         public void CreateInitialMainPoints(VibroTable vibroTable)
@@ -39,28 +38,29 @@ namespace RectPacking.Operations
             this.MainPoints.Add(new Point(vibroTable.Width, vibroTable.Height, true));
         }
 
-        public void CreateInitialBounds(VibroTable vibroTable)
-        {
-            //do stuff
-        }
-
         public void Proceed()
         {
             var newPoints = this.MainPoints;
-            while (ResumePlacement())
+
+            var best = SampleBestCOA();//sample is used to get into the cycle
+            while (ResumePlacement(best))
             {
                 CreateCOAsForPoints(newPoints);
-                COA best = ChooseBestCOA();
-                best.Place();
-                ManageBoundsFor(best);
-                newPoints = ManagePointsFor(best); //change link
-                DeleteCOAsWith(best.Product);
+                best = ChooseBestCOA();
+                if (best != null)
+                {
+                    PlacedCOAs.Add(best);
+                    best.Place();//todo: Graphical on-line stuff would be cool
+                    newPoints = ManagePointsFor(best); //change link
+                    DeleteCOAsWith(best.Product);
+                }
             }
+            Export.ToJson(PlacedCOAs);
         }
 
-        public bool ResumePlacement()
+        public bool ResumePlacement(COA best)
         {
-            return false;
+            return best!=null;//todo: Stopping criteria?
         }
 
         public void CreateCOAsForPoints(List<Point> points = null, bool withConstrains = true)
@@ -76,25 +76,31 @@ namespace RectPacking.Operations
                 }
             }
             if (withConstrains)
-                this.COAs = Filters.FilterCOAs(this);
+                list = Filters.FilterCOAs(this);
             this.COAs = list;
         }
 
         public COA ChooseBestCOA()
         {
-            return new COA(new Product("1", 1, 1), new Point(1, 1, true), COA.CornerType.TopLeft, false);
+            if (!COAs.Any()) return null;
+            return COAs.OrderBy(coa => coa.Product.Area).First(); //max area is the best.. for now
         }
-        public void ManageBoundsFor(COA best)
-        {
 
-        }
         public List<Point> ManagePointsFor(COA best)
         {
-            return new List<Point>();
+            return this.MainPoints;
         }
         public void DeleteCOAsWith(Product bestProduct)
         {
+            this.ProductList = Product.RemoveFromListWithId(bestProduct.Identifier, this.ProductList);
+            this.COAs = COA.RemoveFromListWithId(bestProduct.Identifier, this.COAs);
+        }
 
+        public COA SampleBestCOA()
+        {
+            const int greatNumber = 1000000;
+            return new COA(new Product(greatNumber, greatNumber, false),
+                new Point(), COA.CornerType.TopLeft, false);
         }
 
     }

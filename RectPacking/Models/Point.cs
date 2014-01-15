@@ -18,13 +18,13 @@ namespace RectPacking.Models
         {
         }
 
-        public Point(int X, int Y, bool IsMain)
+        public Point(int X, int Y, bool IsMain = false)
         {
             this.Name = Name;
             this.X = X;
             this.Y = Y;
             this.IsMain = IsMain;
-            this.IsValid = X >= 0 && Y >= 0;
+            this.IsValid = X >= 0 && Y >= 0; 
         }
         public bool IsWithin(VibroTable vibroTable)
         {
@@ -38,6 +38,16 @@ namespace RectPacking.Models
         public bool IsWithinIncludedArea(int xMin, int xMax, int yMin, int yMax)
         {
             return this.X >= xMin && this.X <= xMax && this.Y >= yMin && this.Y <= yMax;
+        }
+
+        public bool IsOutsideOf(COA a)
+        {
+            var xMin = a.Points.Min(p => p.X);
+            var xMax = a.Points.Max(p => p.X);
+            var yMin = a.Points.Min(p => p.Y);
+            var yMax = a.Points.Max(p => p.Y);
+
+            return !IsWithinIncludedArea(xMin, xMax, yMin, yMax);
         }
     }
 }

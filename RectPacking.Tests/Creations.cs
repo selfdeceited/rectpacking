@@ -34,7 +34,14 @@ namespace RectPacking.Tests
             Assert.AreEqual(rotatedProduct.Height, 100);
 
             var stair = new Product("Stair", 100, 200);
+            Assert.True(stair.CanContainInArea(300, 300));
             Assert.True(stair.CanContainInArea(200, 200));
+
+            Assert.True(stair.CanContainInArea(200, 100));
+            Assert.True(stair.CanContainInArea(100, 200));
+
+            Assert.False(stair.CanContainInArea(100, 100));
+            
 
             var averageTable = new VibroTable(300, 300);
             Assert.True(stair.CanContainIn(averageTable));
@@ -85,7 +92,7 @@ namespace RectPacking.Tests
         {
             //to create COA, you need a main point
             var stair = new Product("Stair", 100, 200);
-            var notMainPoint = new Point(10, 10, false);
+            var notMainPoint = new Point(10, 10);
             var invalidCOA = new COA(stair, notMainPoint, COA.CornerType.TopRight, true); //product, corner, is rotated
             Assert.False(invalidCOA.IsValid);
 
@@ -99,6 +106,82 @@ namespace RectPacking.Tests
 
             Assert.AreEqual(COAs.Count, 8);
             //  TODO: MORE THOROUGH TESTS
+        }
+
+        [Test]
+        public void RotatingProductWhileCreatingCOA()
+        {
+            var point = new Point(50, 50, true);
+            //after rotating product is still 30*40
+            var someProduct = new Product(50, 80);
+            var someCOA = new COA(someProduct, point, COA.CornerType.DownLeft, true);
+            //there was a rotate, but product is still, and product in COA is rotated
+            Assert.AreEqual(someProduct.Width, 50);
+            Assert.AreEqual(someProduct.Height, 80);
+        }
+
+        [Test]
+        public void CreatingPointsInCOA()
+        {
+            //static one
+            var point = new Point(100, 90, true);
+            var pList = COA.CalculatePoints(COA.CornerType.TopRight, point, new Product(20, 20));
+            Assert.AreEqual(pList[0].X, 100); 
+            Assert.AreEqual(pList[0].Y, 90); //main point
+
+            Assert.AreEqual(pList[1].X, 100);//lower
+            Assert.AreEqual(pList[1].Y, 110);
+
+            Assert.AreEqual(pList[2].X, 80);//lefter
+            Assert.AreEqual(pList[2].Y, 90);
+
+            Assert.AreEqual(pList[3].X, 80);//opposite
+            Assert.AreEqual(pList[3].Y, 110);
+            
+            //coa shell
+            var product = new Product(30, 40);
+            var topLeft = new COA(product, point, COA.CornerType.TopLeft, false); //not rotated
+
+            Assert.AreEqual(topLeft.Points[0].X, 100);
+            Assert.AreEqual(topLeft.Points[0].Y, 90); //main point
+
+            Assert.AreEqual(topLeft.Points[1].X, 100);//lower
+            Assert.AreEqual(topLeft.Points[1].Y, 130);
+
+            Assert.AreEqual(topLeft.Points[2].X, 130);//righter
+            Assert.AreEqual(topLeft.Points[2].Y, 90);
+
+            Assert.AreEqual(topLeft.Points[3].X, 130);//opposite
+            Assert.AreEqual(topLeft.Points[3].Y, 130);
+
+            var topLeftR = new COA(product, point, COA.CornerType.TopLeft, true); // rotated
+
+            Assert.AreEqual(topLeftR.Points[0].X, 100);
+            Assert.AreEqual(topLeftR.Points[0].Y, 90); //main point
+
+            Assert.AreEqual(topLeftR.Points[1].X, 100);//lower
+            Assert.AreEqual(topLeftR.Points[1].Y, 120);
+
+            Assert.AreEqual(topLeftR.Points[2].X, 140);//righter
+            Assert.AreEqual(topLeftR.Points[2].Y, 90);
+
+            Assert.AreEqual(topLeftR.Points[3].X, 140);//opposite
+            Assert.AreEqual(topLeftR.Points[3].Y, 120);
+
+           
+            var downRightR = new COA(product, point, COA.CornerType.DownRight, true);
+            //40-30
+            Assert.AreEqual(downRightR.Points[0].X, 100);
+            Assert.AreEqual(downRightR.Points[0].Y, 90); //main point
+
+            Assert.AreEqual(downRightR.Points[1].X, 100);//higher
+            Assert.AreEqual(downRightR.Points[1].Y, 60);
+
+            Assert.AreEqual(downRightR.Points[2].X, 60);//lefter
+            Assert.AreEqual(downRightR.Points[2].Y, 90);
+
+            Assert.AreEqual(downRightR.Points[3].X, 60);//opposite
+            Assert.AreEqual(downRightR.Points[3].Y, 60);
         }
     }
 }
