@@ -17,6 +17,8 @@ namespace RectPacking.Helpers
             RemoveInvalidCOAs(ref coaList);//todo: don't like it dublicated
             FilterIntersectionWithPlacedCOAs(placement.PlacedCOAs, ref coaList);
             RemoveInvalidCOAs(ref coaList);
+            FilterComplexIntersection(placement.PlacedCOAs, ref coaList);
+            RemoveInvalidCOAs(ref coaList);
             return coaList;
         }
 
@@ -35,6 +37,21 @@ namespace RectPacking.Helpers
                 foreach (var placedCOA in placedCOAs)
                 {
                     coa.IsValid = coa.IsValid && coa.Points.TrueForAll(point => point.IsOutsideOf(placedCOA));
+                    /* note: coa.IsValid = coa.IsValid && blahblah
+                     * all COAs are valid at the beginning
+                     * to make it in the way: once became invalid, always invalid
+                     * Any other suggestions appreciated.
+                     */
+                }
+            }
+        }
+        public static void FilterComplexIntersection(List<COA> placedCOAs, ref List<COA> coaList)
+        {
+            foreach (var coa in coaList)
+            {
+                foreach (var placedCOA in placedCOAs)
+                {
+                    coa.IsValid = coa.IsValid && !coa.HasIntersectionWith(placedCOA);
                     /* note: coa.IsValid = coa.IsValid && blahblah
                      * all COAs are valid at the beginning
                      * to make it in the way: once became invalid, always invalid

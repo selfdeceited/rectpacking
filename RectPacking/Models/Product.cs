@@ -39,6 +39,7 @@ namespace RectPacking.Models
 
         private Product()
         {
+            //is needed to write new Product {blah} stuff in Dublicate
         }
 
         public bool CanContainIn(VibroTable vibroTable)

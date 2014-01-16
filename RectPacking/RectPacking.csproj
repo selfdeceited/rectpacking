@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Helpers\Export.cs" />
     <Compile Include="Helpers\Filters.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Models\COA.cs" />
     <Compile Include="Models\Point.cs" />
     <Compile Include="Models\Product.cs" />

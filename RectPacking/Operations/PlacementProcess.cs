@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
@@ -38,23 +40,26 @@ namespace RectPacking.Operations
             this.MainPoints.Add(new Point(vibroTable.Width, vibroTable.Height, true));
         }
 
-        public void Proceed()
+        public void Proceed(bool debug = false)
         {
+            var image = new ImageHelper(this);
             var newPoints = this.MainPoints;
-
             var best = SampleBestCOA();//sample is used to get into the cycle
+
             while (ResumePlacement(best))
             {
                 CreateCOAsForPoints(newPoints);
                 best = ChooseBestCOA();
+                
                 if (best != null)
                 {
                     PlacedCOAs.Add(best);
-                    best.Place();//todo: Graphical on-line stuff would be cool
-                    newPoints = ManagePointsFor(best); //change link
+                    if (debug) image.UpdateStatus(this, best);
+                    newPoints = ManagePointsFor(best);
                     DeleteCOAsWith(best.Product);
                 }
             }
+            image.UpdateStatus(this);
             Export.ToJson(PlacedCOAs);
         }
 
@@ -83,11 +88,17 @@ namespace RectPacking.Operations
         public COA ChooseBestCOA()
         {
             if (!COAs.Any()) return null;
-            return COAs.OrderBy(coa => coa.Product.Area).First(); //max area is the best.. for now
+            var best = COAs.OrderByDescending(coa => coa.Product.Area).First();//max area is the best.. for now
+            return best; 
         }
 
         public List<Point> ManagePointsFor(COA best)
         {
+            foreach (var point in best.Points)
+            {
+                point.IsMain = true;
+                MainPoints.Add(point);
+            }
             return this.MainPoints;
         }
         public void DeleteCOAsWith(Product bestProduct)

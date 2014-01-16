@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using RectPacking.Helpers;
 using RectPacking.Models;
 using RectPacking.Operations;
 namespace RectPacking.Tests
@@ -96,8 +97,64 @@ namespace RectPacking.Tests
         {
             var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
-            placement.Proceed();
+            placement.Proceed(true);
             Assert.AreEqual(placement.PlacedCOAs.Count, 2);
+            //full placement
+
+        }
+
+        [Test]
+        public void ImageCreate()
+        {
+            var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
+                SampleInitializer.CreateProducts());
+            var image = new ImageHelper(placement);
+            Assert.NotNull(image);
+        }
+        [Test]
+        public void AddCOAToImage()
+        {
+            var products = SampleInitializer.CreateProducts();
+            var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(), products);
+            var image = new ImageHelper(placement);
+            var toPlace = new COA(products[0], new Point(100, 100, true), COA.CornerType.TopLeft, true);
+            image.UpdateStatus(placement, toPlace);
+            Assert.NotNull(image);
+        }
+
+        [Test]
+        public void MassPlacement()
+        {
+            var products = new List<Product>
+            {
+                new Product(100,200),
+                new Product(300,100),
+                new Product(200,300),
+                new Product(50,50),
+                new Product(50,50),
+                new Product(100,50),
+                new Product(100,100),
+            };
+            //must be taken 4 : 100-200, 300-100, 200-300 and 100-00 
+            var massPlacement = new PlacementProcess(SampleInitializer.CreateVibroTable(), products);
+            massPlacement.Proceed(true);
+            Assert.AreEqual(massPlacement.PlacedCOAs.Count, 4);
+        }
+
+        [Test]
+        public void HighLoadPlacement()
+        {
+            var products = new List<Product>();
+            for (int i = 0; i < 40; i++)
+            {
+                var randX = new Random((int)(DateTime.Now.ToBinary()/215-i));
+                var randY = new Random((int)(1234+DateTime.Now.Millisecond+3*i));
+                var randomX = randX.Next(50, 150);
+                var randomY = randY.Next(30, 100);
+                products.Add(new Product("product" + i, randomX, randomY));
+            }
+            var massPlacement = new PlacementProcess(new VibroTable(500, 400), products);
+            massPlacement.Proceed();
         }
 
     }

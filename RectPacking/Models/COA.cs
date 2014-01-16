@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using RectPacking.Models;
 
 namespace RectPacking.Models
@@ -78,6 +80,33 @@ namespace RectPacking.Models
                 list.Remove(coasToDelete[i]);
             }
             return list;
+        }
+
+        public Rectangle ToRectangle()
+        {
+            var corner = Corner.ToString();
+            var xMin = corner.Contains("Left") ? MainPoint.X : MainPoint.X - Product.Width;
+            var yMin = corner.Contains("Top")  ? MainPoint.Y : MainPoint.Y - Product.Height;
+            return new Rectangle(xMin, yMin, Product.Width, Product.Height);
+        }
+
+        public bool HasIntersectionWith(COA coa)
+        {
+            var sample = this.ToRectangle();
+            var pretender = coa.ToRectangle();
+            if (sample.IntersectsWith(pretender)) return true;
+            return false;
+        }
+
+        public static bool HasSamePointCoords(COA sample, COA pretender)
+        {
+            var match = true;
+            var sampleRect = sample.ToRectangle();
+            var pretenderRect = pretender.ToRectangle();
+            if(sampleRect.X == pretenderRect.X && sampleRect.Y == pretenderRect.Y
+                && sampleRect.Width == pretenderRect.Width && sampleRect.Height==pretenderRect.Height)
+                return true;
+            return false;
         }
     }
 }

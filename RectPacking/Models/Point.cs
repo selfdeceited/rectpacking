@@ -47,7 +47,7 @@ namespace RectPacking.Models
             var yMin = a.Points.Min(p => p.Y);
             var yMax = a.Points.Max(p => p.Y);
 
-            return !IsWithinIncludedArea(xMin, xMax, yMin, yMax);
+            return !IsWithinArea(xMin, xMax, yMin, yMax);
         }
     }
 }
