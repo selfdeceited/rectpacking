@@ -42,6 +42,7 @@ namespace RectPacking.Operations
 
         public void Proceed(bool debug = false)
         {
+            //var strategy = new Strategy();
             var image = new ImageHelper(this);
             var newPoints = this.MainPoints;
             var best = SampleBestCOA();//sample is used to get into the cycle
@@ -88,7 +89,10 @@ namespace RectPacking.Operations
         public COA ChooseBestCOA()
         {
             if (!COAs.Any()) return null;
-            var best = COAs.OrderByDescending(coa => coa.Product.Area).First();//max area is the best.. for now
+            var orderedByArea = COAs.OrderByDescending(coa => coa.Product.Area); //max area is the best.. for now
+            var closerToTopLeft = orderedByArea.OrderBy(coa => coa.Points.Min(p => p.X) * coa.Points.Min(p => p.X)
+                + coa.Points.Min(p => p.Y) * coa.Points.Min(p => p.Y));
+            var best = closerToTopLeft.First();
             return best; 
         }
 

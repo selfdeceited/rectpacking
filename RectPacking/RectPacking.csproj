@@ -49,6 +49,7 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\VibroTable.cs" />
     <Compile Include="Operations\PlacementProcess.cs" />
+    <Compile Include="Operations\Strategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

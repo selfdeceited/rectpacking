@@ -46,18 +46,37 @@ namespace RectPacking.Helpers
             Save((++count).ToString());
         }
 
-        private static Bitmap DrawRectangle(Bitmap tableBitmap, Rectangle rectangle, Color color)
+        private static Bitmap DrawRectangle(Bitmap tableBitmap, Rectangle rectangle, Color color, bool isTable = true)
         {
             for (var x = rectangle.X; x < rectangle.X + rectangle.Width; x++)
                 for (var y = rectangle.Y; y < rectangle.Y + rectangle.Height; y++)
                     tableBitmap.SetPixel(x, y, color);
 
+            if (isTable)
+                tableBitmap = DrawBorderForRectangle(tableBitmap, rectangle);
+
             return tableBitmap;
         }
+
+        private static Bitmap DrawBorderForRectangle(Bitmap tableBitmap, Rectangle rectangle)
+        {
+            for (var x = rectangle.X; x < rectangle.X + rectangle.Width; x++)
+            {
+                tableBitmap.SetPixel(x, rectangle.Y, Color.Black);
+                tableBitmap.SetPixel(x, rectangle.Y + rectangle.Height - 1, Color.Black);
+            }
+            for (var y = rectangle.Y; y < rectangle.Y + rectangle.Height; y++)
+            {
+                tableBitmap.SetPixel(rectangle.X, y, Color.Black);
+                tableBitmap.SetPixel(rectangle.X+rectangle.Width-1, y, Color.Black);
+            }
+            return tableBitmap;
+        }
+
         private static Bitmap DrawPoint(Bitmap tableBitmap, Color color, Point point)
         {
             //todo: refactor - interseption with edges
-            const int pointSize = 10;
+            const int pointSize = 4;
 
             var pointsizeX = pointSize;
             var pointsizeY = pointSize;
@@ -89,7 +108,7 @@ namespace RectPacking.Helpers
                 if (!isHalvedY) pointsizeY /= 2;
                 ymin = tableBitmap.Height - pointsizeY;
             }
-            return DrawRectangle(tableBitmap, new Rectangle(xmin, ymin, pointsizeX, pointsizeY), color);
+            return DrawRectangle(tableBitmap, new Rectangle(xmin, ymin, pointsizeX, pointsizeY), color, false);
         }
 
         public void Save(string tag = null)

@@ -145,16 +145,16 @@ namespace RectPacking.Tests
         public void HighLoadPlacement()
         {
             var products = new List<Product>();
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 60; i++)
             {
-                var randX = new Random((int)(DateTime.Now.ToBinary()/215-i));
-                var randY = new Random((int)(1234+DateTime.Now.Millisecond+3*i));
-                var randomX = randX.Next(50, 150);
-                var randomY = randY.Next(30, 100);
+                var randX = new Random((int)(DateTime.Now.ToBinary() / 215 - i));
+                var randY = new Random((int)(1234 + DateTime.Now.Millisecond + 3 * i));
+                var randomX = randX.Next(20, 150);
+                var randomY = randY.Next(10, 100);
                 products.Add(new Product("product" + i, randomX, randomY));
             }
             var massPlacement = new PlacementProcess(new VibroTable(500, 400), products);
-            massPlacement.Proceed();
+            massPlacement.Proceed(true);
         }
 
     }
