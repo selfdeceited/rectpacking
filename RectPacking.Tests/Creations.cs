@@ -183,5 +183,44 @@ namespace RectPacking.Tests
             Assert.AreEqual(downRightR.Points[3].X, 60);//opposite
             Assert.AreEqual(downRightR.Points[3].Y, 60);
         }
+
+        [Test]
+        public void TouchTest()
+        {
+            var coa1 = new COA(new Product(200, 300), new Point(0, 0, true), COA.CornerType.TopLeft, false);
+            var coa2 = new COA(new Product(200, 300), new Point(0, 300, true), COA.CornerType.TopLeft, false);
+            Assert.True(coa1.Touches(coa2));
+            Assert.True(coa2.Touches(coa1));
+            var coa3 = new COA(new Product(300, 300), new Point(0, 300, true), COA.CornerType.TopLeft, false);
+            Assert.True(coa3.Touches(coa1));
+            Assert.True(coa1.Touches(coa3));
+            var coa4 = new COA(new Product(200, 300), new Point(100, 0, true), COA.CornerType.TopLeft, false);
+            Assert.True(coa3.Touches(coa4));
+            Assert.True(coa4.Touches(coa3));
+            var coa5 = new COA(new Product(400, 300), new Point(0, 300, true), COA.CornerType.TopLeft, false);
+            Assert.True(coa5.Touches(coa4));
+            Assert.True(coa4.Touches(coa5));
+
+            Assert.True(coa2.Touches(coa4));
+            Assert.True(coa4.Touches(coa2));
+            var coa6 = new COA(new Product(200, 300), new Point(200, 300, true), COA.CornerType.TopLeft, false);
+            Assert.True(coa4.Touches(coa6));
+            Assert.True(coa6.Touches(coa4));
+
+            var coa7 = new COA(new Product(400, 300), new Point(400, 0, true), COA.CornerType.TopLeft, false);
+            Assert.False(coa1.Touches(coa7));
+            Assert.False(coa7.Touches(coa1));
+            var coa8 = new COA(new Product(50, 50), new Point(500, 500, true), COA.CornerType.TopLeft, false);
+            Assert.False(coa1.Touches(coa8));
+            Assert.False(coa8.Touches(coa1));
+
+            //one-point
+
+            Assert.False(coa1.Touches(coa6));
+            Assert.False(coa6.Touches(coa1));
+
+            //withTable
+
+        }
     }
 }

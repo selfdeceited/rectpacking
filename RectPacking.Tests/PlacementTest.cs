@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using RectPacking.Helpers;
 using RectPacking.Models;
 using RectPacking.Operations;
+using RectPacking.Strategies;
+
 namespace RectPacking.Tests
 {
     [TestFixture]
@@ -97,9 +97,9 @@ namespace RectPacking.Tests
         {
             var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
-            placement.Proceed(true);
+            placement.Proceed(new EmptyStrategy(), true);
             Assert.AreEqual(placement.PlacedCOAs.Count, 2);
-            //full placement
+            //todo:full placement
 
         }
 
@@ -121,41 +121,5 @@ namespace RectPacking.Tests
             image.UpdateStatus(placement, toPlace);
             Assert.NotNull(image);
         }
-
-        [Test]
-        public void MassPlacement()
-        {
-            var products = new List<Product>
-            {
-                new Product(100,200),
-                new Product(300,100),
-                new Product(200,300),
-                new Product(50,50),
-                new Product(50,50),
-                new Product(100,50),
-                new Product(100,100),
-            };
-            //must be taken 4 : 100-200, 300-100, 200-300 and 100-00 
-            var massPlacement = new PlacementProcess(SampleInitializer.CreateVibroTable(), products);
-            massPlacement.Proceed(true);
-            Assert.AreEqual(massPlacement.PlacedCOAs.Count, 4);
-        }
-
-        [Test]
-        public void HighLoadPlacement()
-        {
-            var products = new List<Product>();
-            for (int i = 0; i < 60; i++)
-            {
-                var randX = new Random((int)(DateTime.Now.ToBinary() / 215 - i));
-                var randY = new Random((int)(1234 + DateTime.Now.Millisecond + 3 * i));
-                var randomX = randX.Next(20, 150);
-                var randomY = randY.Next(10, 100);
-                products.Add(new Product("product" + i, randomX, randomY));
-            }
-            var massPlacement = new PlacementProcess(new VibroTable(500, 400), products);
-            massPlacement.Proceed(true);
-        }
-
     }
 }

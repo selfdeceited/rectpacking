@@ -54,9 +54,15 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Creations.cs" />
+    <Compile Include="FakeStrategy.cs" />
+    <Compile Include="FakeStrategy1.cs" />
+    <Compile Include="FakeStrategy2.cs" />
+    <Compile Include="FakeStrategyManager.cs" />
     <Compile Include="PlacementTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleInitializer.cs" />
+    <Compile Include="StrategyTest.cs" />
+    <Compile Include="TestLauncher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

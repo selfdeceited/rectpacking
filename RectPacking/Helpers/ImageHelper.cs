@@ -16,15 +16,16 @@ namespace RectPacking.Helpers
     {
         private static int count;
         private Bitmap TableBitmap { get; set; }
+        private string FolderTag { get; set; }
 
-        public ImageHelper(PlacementProcess process)
+        public ImageHelper(PlacementProcess process, string folderTag = null)
         {
             TableBitmap = new Bitmap(process.VibroTable.Width, process.VibroTable.Height);
 
             TableBitmap = DrawRectangle(TableBitmap, new Rectangle(0, 0, TableBitmap.Width, TableBitmap.Height)
                 , Color.FloralWhite);
-
-            Save();
+            this.FolderTag = folderTag;
+            Save(folderTag);
         }
 
         public void UpdateStatus(PlacementProcess process, COA bestCOA = null)
@@ -35,7 +36,7 @@ namespace RectPacking.Helpers
                 {
                     TableBitmap = DrawRectangle(TableBitmap, coa.ToRectangle(), RandomColor());
                 }
-                Save("final");
+                Save(this.FolderTag, "final");
                 return;
             }
             TableBitmap = DrawRectangle(TableBitmap, bestCOA.ToRectangle(), RandomColor());
@@ -43,7 +44,7 @@ namespace RectPacking.Helpers
             {
                 TableBitmap = DrawPoint(TableBitmap, Color.Red, point);
             }
-            Save((++count).ToString());
+            Save(this.FolderTag,(++count).ToString());
         }
 
         private static Bitmap DrawRectangle(Bitmap tableBitmap, Rectangle rectangle, Color color, bool isTable = true)
@@ -111,14 +112,16 @@ namespace RectPacking.Helpers
             return DrawRectangle(tableBitmap, new Rectangle(xmin, ymin, pointsizeX, pointsizeY), color, false);
         }
 
-        public void Save(string tag = null)
+        public void Save(string folderTag = null, string tag = null)
         {
             using (var m = new MemoryStream())//freaky stuff to make it work
             {
                 TableBitmap.Save(m, ImageFormat.Jpeg);
                 var img = Image.FromStream(m);
                 var pathTag = string.IsNullOrEmpty(tag) ? "00.jpg" : "0" + tag + ".jpg";
-                img.Save("C:\\test\\" + pathTag, ImageFormat.Jpeg);
+                folderTag = string.IsNullOrEmpty(folderTag) ? "" :  folderTag + "\\";
+                var destination = "C:\\test\\" + folderTag + pathTag;
+                img.Save(destination, ImageFormat.Jpeg);
             }
         }
 

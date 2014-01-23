@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Markup;
 using RectPacking.Models;
 using RectPacking.Helpers;
+using RectPacking.Strategies;
 
 namespace RectPacking.Operations
 {
@@ -40,17 +41,19 @@ namespace RectPacking.Operations
             this.MainPoints.Add(new Point(vibroTable.Width, vibroTable.Height, true));
         }
 
-        public void Proceed(bool debug = false)
+        public void Proceed(Strategy manager, bool debug = false, string folderTag = null)
         {
-            //var strategy = new Strategy();
-            var image = new ImageHelper(this);
+
+            var image = new ImageHelper(this, folderTag);
             var newPoints = this.MainPoints;
             var best = SampleBestCOA();//sample is used to get into the cycle
 
+            var iteration = 0;
             while (ResumePlacement(best))
             {
+                iteration++;
                 CreateCOAsForPoints(newPoints);
-                best = ChooseBestCOA();
+                best = ChooseBestCOA(manager, iteration);
                 
                 if (best != null)
                 {
@@ -60,8 +63,14 @@ namespace RectPacking.Operations
                     DeleteCOAsWith(best.Product);
                 }
             }
-            image.UpdateStatus(this);
-            Export.ToJson(PlacedCOAs);
+            if (debug) image.UpdateStatus(this);
+            var json = Export.ToJson(this);
+            var folder = string.IsNullOrEmpty(folderTag) ? "" :  folderTag + "\\";
+            var textFile = new System.IO.StreamWriter("C:\\test\\" + folder + "data.json");
+            
+            textFile.Write(json);
+            textFile.Close();
+
         }
 
         public bool ResumePlacement(COA best)
@@ -86,20 +95,20 @@ namespace RectPacking.Operations
             this.COAs = list;
         }
 
-        public COA ChooseBestCOA()
+        public COA ChooseBestCOA(Strategy manager, int iteration)
         {
-            if (!COAs.Any()) return null;
-            var orderedByArea = COAs.OrderByDescending(coa => coa.Product.Area); //max area is the best.. for now
-            var closerToTopLeft = orderedByArea.OrderBy(coa => coa.Points.Min(p => p.X) * coa.Points.Min(p => p.X)
-                + coa.Points.Min(p => p.Y) * coa.Points.Min(p => p.Y));
-            var best = closerToTopLeft.First();
-            return best; 
+            manager.UpdateIterationStatFor(iteration, this);
+            if (!COAs.Any()) 
+                return null;
+
+            return (COA) manager.Solve(COAs);
         }
 
         public List<Point> ManagePointsFor(COA best)
         {
             foreach (var point in best.Points)
             {
+                if(!point.IsMain)
                 point.IsMain = true;
                 MainPoints.Add(point);
             }
@@ -118,5 +127,9 @@ namespace RectPacking.Operations
                 new Point(), COA.CornerType.TopLeft, false);
         }
 
+        public void RevertCOA(COA a)
+        {
+            this.COAs.Remove(a);
+        }
     }
 }

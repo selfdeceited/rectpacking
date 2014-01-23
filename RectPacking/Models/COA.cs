@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using RectPacking.Extensions;
 using RectPacking.Models;
 
 namespace RectPacking.Models
 {
-    public class COA
+    public class COA: IAction
+        //COA means Common Orderable Action
     {
         public enum CornerType
         {
@@ -22,6 +24,15 @@ namespace RectPacking.Models
         public CornerType Corner { get; set; }
         public bool Rotated { get; set; }
         public bool IsValid { get; set; }
+
+
+        //implemented members
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int Left { get; set; }
+        public int Top { get; set; }
+
+
 
         public COA(Product Product, Point MainPoint, CornerType CornerType, bool Rotated)
         {
@@ -36,6 +47,18 @@ namespace RectPacking.Models
             this.Rotated = Rotated;
             this.IsValid = MainPoint != null && MainPoint.IsMain;
             this.Points = CalculatePoints(CornerType, MainPoint, this.Product);
+
+
+            //implemented members in the constructor
+            var corner = CornerType.ToString();
+            this.Width = this.Product.Width;
+            this.Height = this.Product.Height;
+            this.Left = corner.Contains("Left") ? MainPoint.X : MainPoint.X - this.Product.Width;
+            this.Top = corner.Contains("Top") ? MainPoint.Y : MainPoint.Y - this.Product.Height;
+        }
+
+        public COA()
+        {
         }
 
         public static void ToPack(Product Product, Point Point, ref List<COA> list)
@@ -56,16 +79,16 @@ namespace RectPacking.Models
 
         public static List<Point> CalculatePoints(CornerType CornerType, Point MainPoint, Product Product)
         {
-            var points = new List<Point>();
-            points.Add(MainPoint);
             var corner = CornerType.ToString();
             var oppositeX = corner.Contains("Left") ? MainPoint.X + Product.Width : MainPoint.X - Product.Width;
             var oppositeY = corner.Contains("Top") ? MainPoint.Y + Product.Height : MainPoint.Y - Product.Height;
-            points.Add(new Point(MainPoint.X, oppositeY));
-            points.Add(new Point(oppositeX, MainPoint.Y));
-            points.Add(new Point(oppositeX, oppositeY));
-
-            return points;
+            return new List<Point>
+            {
+                MainPoint,
+                new Point(MainPoint.X, oppositeY),
+                new Point(oppositeX, MainPoint.Y),
+                new Point(oppositeX, oppositeY)
+            };
         }
 
         public void Place()
@@ -84,10 +107,7 @@ namespace RectPacking.Models
 
         public Rectangle ToRectangle()
         {
-            var corner = Corner.ToString();
-            var xMin = corner.Contains("Left") ? MainPoint.X : MainPoint.X - Product.Width;
-            var yMin = corner.Contains("Top")  ? MainPoint.Y : MainPoint.Y - Product.Height;
-            return new Rectangle(xMin, yMin, Product.Width, Product.Height);
+            return new Rectangle(Left, Top, Width, Height);
         }
 
         public bool HasIntersectionWith(COA coa)
@@ -108,5 +128,26 @@ namespace RectPacking.Models
                 return true;
             return false;
         }
+
+        public bool Touches(COA coa)
+        {
+            if (this.HasIntersectionWith(coa)) return false;
+            
+            var sample = this.ToRectangle();
+            var pretender = coa.ToRectangle();
+
+            return sample.Touches(pretender);
+
+            return false;
+        }
+
+        public int TimesItTouches(VibroTable table)
+        {
+            var sample = this.ToRectangle();
+            return sample.Touches(table);
+        }
+
+
+
     }
 }
