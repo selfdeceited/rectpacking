@@ -57,9 +57,13 @@
     <Compile Include="Operations\IterationStat.cs" />
     <Compile Include="Operations\PlacementProcess.cs" />
     <Compile Include="Strategies\EmptyStategy.cs" />
+    <Compile Include="Strategies\Metaheuristic\SimpleMetaheuristicStrategy.cs" />
+    <Compile Include="Strategies\Primitive\CloserToCornersHeuristicStrategy.cs" />
     <Compile Include="Strategies\Heuristic\HeuristicStrategyManager.cs" />
+    <Compile Include="Strategies\Primitive\MaxAreaFirstHeuristicStrategy.cs" />
     <Compile Include="Strategies\Heuristic\QuasiHumanHeuristicStrategy.cs" />
     <Compile Include="Strategies\Heuristic\SimpleHeuristicStrategy.cs" />
+    <Compile Include="Strategies\Primitive\SmallFirstHeuristicStrategy.cs" />
     <Compile Include="Strategies\InversiveStrategy.cs" />
     <Compile Include="Strategies\Strategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

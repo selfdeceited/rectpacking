@@ -22,5 +22,10 @@ namespace RectPacking.Extensions
         {
             return value > min && value < max;
         }
+
+        public static bool IsBetweenIncl(this decimal value, decimal min, decimal max)
+        {
+            return value >= min && value <= max;
+        }
     }
 }

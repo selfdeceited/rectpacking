@@ -15,5 +15,7 @@ namespace RectPacking.Models
 
         int Left { get; set; }
         int Top { get; set; }
+
+        double Distance { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace RectPacking.Models
         public int Height { get; set; }
         public int Left { get; set; }
         public int Top { get; set; }
-
+        public double Distance { get; set; }
 
 
         public COA(Product Product, Point MainPoint, CornerType CornerType, bool Rotated)

@@ -108,9 +108,18 @@ namespace RectPacking.Operations
         {
             foreach (var point in best.Points)
             {
-                if(!point.IsMain)
-                point.IsMain = true;
-                MainPoints.Add(point);
+                //check if has valid COAs from this point
+                for (int index = 0; index < MainPoints.Count; index++)
+                {
+                    var hasValidCOAs = COAs.Any(c => c.MainPoint == MainPoints[index]);
+                    if(!hasValidCOAs) MainPoints.RemoveAt(index);
+                }
+
+                if (!point.IsMain && !point.CheckIfHasPointInSameLocation(MainPoints))
+                {
+                    point.IsMain = true;
+                    MainPoints.Add(point);
+                }
             }
             return this.MainPoints;
         }

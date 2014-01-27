@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RectPacking.Operations;
 
 namespace RectPacking.Models
 {
@@ -49,5 +50,12 @@ namespace RectPacking.Models
 
             return !IsWithinArea(xMin, xMax, yMin, yMax);
         }
+
+        public bool CheckIfHasPointInSameLocation(List<Point> mainPoints)
+        {
+            return mainPoints.Any(mp => mp.X == this.X && mp.Y == this.Y);
+        }
+
+
     }
 }
