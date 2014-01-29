@@ -17,7 +17,7 @@ namespace RectPacking.Operations
         public VibroTable VibroTable { get; set; }
         public List<Product> ProductList { get; set; }
         public List<Point> MainPoints { get; set; }
-        public string ProcessState { get; set; }
+        public string ProcessState { get; set; }//to abstract class
         public List<COA> COAs { get; set; }
         public List<COA> PlacedCOAs { get; set; }
 
@@ -106,6 +106,7 @@ namespace RectPacking.Operations
 
         public List<Point> ManagePointsFor(COA best)
         {
+            var newPoints = new List<Point>();
             foreach (var point in best.Points)
             {
                 //check if has valid COAs from this point
@@ -118,10 +119,10 @@ namespace RectPacking.Operations
                 if (!point.IsMain && !point.CheckIfHasPointInSameLocation(MainPoints))
                 {
                     point.IsMain = true;
-                    MainPoints.Add(point);
+                    newPoints.Add(point);
                 }
             }
-            return this.MainPoints;
+            return newPoints;
         }
         public void DeleteCOAsWith(Product bestProduct)
         {

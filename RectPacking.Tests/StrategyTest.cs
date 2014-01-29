@@ -32,6 +32,15 @@ namespace RectPacking.Tests
             var massPlacement = new PlacementProcess(new VibroTable(200, 200), products);
             massPlacement.Proceed(new FakeStrategyManager(fake1, fake2), true);
             //todo: write down all coas as must be
+            Assert.True(massPlacement.PlacedCOAs.Any());
+
+            //top right, area > 400, area < 700; 10*45 15*40 40*15 45*10 first is 10*45
+            Assert.AreEqual(massPlacement.PlacedCOAs[0].ToString(),"10*45 cTopRight on p200,0");
+            Assert.True(massPlacement.PlacedCOAs[0].Product.Area > 400);
+            Assert.True(massPlacement.PlacedCOAs[0].Product.Area < 700);
+            Assert.True(massPlacement.PlacedCOAs[1].ToString().Contains("cTopRight"));
+            Assert.True(massPlacement.PlacedCOAs[1].Product.Area > 400);
+            Assert.True(massPlacement.PlacedCOAs[1].Product.Area < 700);
 
         }
         [Test]

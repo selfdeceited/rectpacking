@@ -19,7 +19,7 @@ namespace RectPacking.Strategies.Heuristic
         {
         }
 
-        public override IAction Solve(List<COA> COAs )
+        public override IAction Solve(List<COA> COAs)
         {
             if (!COAs.Any()) return null;
             var orderedByArea = COAs.OrderByDescending(coa => coa.Product.Area); //max area is the best.. for now

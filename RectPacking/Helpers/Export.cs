@@ -17,20 +17,19 @@ namespace RectPacking.Helpers
             sb.Append("    \"type\": \"VibroTable\",");
             sb.Append("    \"index\": \"0\",");
             sb.Append("    \"width\": \"" + placement.VibroTable.Width + "\",");
-            sb.Append("    \"height\": \"" + placement.VibroTable.Height + "\",");
+            sb.Append("    \"height\": \"" + placement.VibroTable.Height + "\"");
             sb.Append("        },");
 
             sb.Append("\"coas\": [");
             foreach (var coa in placement.PlacedCOAs)
             {
-                var rect = coa.ToRectangle();
                 sb.Append("    {");
                 sb.Append("    \"type\": \"COA\",");
                 sb.Append("    \"index\": \"" + placement.PlacedCOAs.IndexOf(coa) + "\",");
-                sb.Append("    \"x\": \"" + rect.X + "\",");
-                sb.Append("    \"Y\": \"" + rect.Y + "\",");
-                sb.Append("    \"width\": \"" + rect.Width + "\",");
-                sb.Append("    \"height\": \"" + rect.Height + "\",");
+                sb.Append("    \"X\": \"" + coa.Left + "\",");
+                sb.Append("    \"Y\": \"" + coa.Top + "\",");
+                sb.Append("    \"width\": \"" + coa.Width + "\",");
+                sb.Append("    \"height\": \"" + coa.Height + "\"");
                 sb.Append("    }");
 
                 if (placement.PlacedCOAs.Last() != coa)
@@ -46,7 +45,7 @@ namespace RectPacking.Helpers
             var placedArea = CalculateArea(placement.PlacedCOAs);
             sb.Append("    \"placed area\": \" " + placedArea + "\",");
             var persentage = placedArea * 100 / placement.VibroTable.Area;
-            sb.Append("    \"persentage\": \"" + persentage + "\",");
+            sb.Append("    \"persentage\": \"" + persentage + "\"");
             sb.Append("        }");
 
             sb.Append("}");

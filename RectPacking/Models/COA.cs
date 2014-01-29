@@ -148,6 +148,10 @@ namespace RectPacking.Models
         }
 
 
-
+        public override string ToString()
+        {
+            var str = Product.Width + "*" + Product.Height + " c" + Corner + " on p" + MainPoint.X + "," + MainPoint.Y;
+            return str;
+        }
     }
 }

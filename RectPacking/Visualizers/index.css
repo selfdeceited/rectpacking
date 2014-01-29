@@ -1,0 +1,57 @@
+table.main{
+
+	width:85%;
+	margin-left:7%;
+	text-align: center;
+
+}
+.hasTicket{
+		background-color: rgb(144, 207, 149);;
+		border-radius: 5px;
+		height: 30px;
+}
+.used{
+		background-color: rgb(236, 172, 172);
+		border-radius: 5px;
+		height: 30px;
+}
+th{
+	height: 30px;
+}
+td{
+	width:30px;
+	min-height: 30px;
+	border: 5px solid white;
+	border-radius: 10px;
+}
+.teamname{
+	margin:10px;
+	height: 30px;
+}
+.hasTicket:hover{
+	background-color: #FFFC9E;
+	border-radius: 5px;
+	cursor:pointer;
+}
+.used:hover{
+	background-color: rgb(236, 172, 172);
+	border-radius: 5px;
+	cursor:pointer;
+}
+button{
+	width:120px;
+}
+.custom-table{
+	height: 300px !important;
+}
+.info{
+	background: url(info.png) no-repeat ;
+	background-size: 3.2%;
+	border-color: #bce8f1;
+	background-color: #d9edf7;
+	padding-left:50px;
+}
+.buttonInfo{
+	margin:5px;
+	width:100px;
+}

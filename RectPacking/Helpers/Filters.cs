@@ -12,17 +12,17 @@ namespace RectPacking.Helpers
     {
         public static List<COA> FilterCOAs(PlacementProcess placement)
         {
-            var coaList = placement.COAs;
+            IEnumerable<COA> coaList = placement.COAs;
             FilterIntersectionWithTable(placement.VibroTable, ref coaList);
             RemoveInvalidCOAs(ref coaList);//todo: don't like it dublicated
             FilterIntersectionWithPlacedCOAs(placement.PlacedCOAs, ref coaList);
             RemoveInvalidCOAs(ref coaList);
             FilterComplexIntersection(placement.PlacedCOAs, ref coaList);
             RemoveInvalidCOAs(ref coaList);
-            return coaList;
+            return coaList.ToList();
         }
 
-        public static void FilterIntersectionWithTable(VibroTable vibroTable, ref List<COA> coaList )
+        public static void FilterIntersectionWithTable(VibroTable vibroTable, ref IEnumerable<COA> coaList )
         {
             foreach (var coa in coaList)
             {
@@ -30,7 +30,7 @@ namespace RectPacking.Helpers
             }
         }
 
-        public static void FilterIntersectionWithPlacedCOAs(List<COA> placedCOAs, ref List<COA> coaList)
+        public static void FilterIntersectionWithPlacedCOAs(List<COA> placedCOAs, ref IEnumerable<COA> coaList)
         {
             foreach (var coa in coaList)
             {
@@ -45,7 +45,7 @@ namespace RectPacking.Helpers
                 }
             }
         }
-        public static void FilterComplexIntersection(List<COA> placedCOAs, ref List<COA> coaList)
+        public static void FilterComplexIntersection(List<COA> placedCOAs, ref IEnumerable<COA> coaList)
         {
             foreach (var coa in coaList)
             {
@@ -61,16 +61,12 @@ namespace RectPacking.Helpers
             }
         }
 
-        public static void RemoveInvalidCOAs(ref List<COA> coaList)
+        public static void RemoveInvalidCOAs(ref IEnumerable<COA> coaList)
         {
             if (coaList.Any(coa=>!coa.IsValid))
             {
-                coaList = coaList.Where(coa => coa.IsValid).ToList();
+                coaList = coaList.Where(coa => coa.IsValid);
             }
-            /* todo: FIX/REFACTOR
-             * with every .Where().ToList() coaList deletes itself and occupies more place in CLR heap.
-             * this is bad because it makes GarbageCollector work more and leads to slower performance.
-             */
         }
     }
 }
