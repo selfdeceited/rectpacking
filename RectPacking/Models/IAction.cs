@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -17,5 +18,8 @@ namespace RectPacking.Models
         int Top { get; set; }
 
         double Distance { get; set; }
+
+        Product Product { get; set; }
+        Rectangle ToRectangle();
     }
 }

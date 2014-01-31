@@ -10,7 +10,7 @@ namespace RectPacking.Helpers
 {
     public static class Export
     {
-        public static string ToJson(PlacementProcess placement)
+        public static string ToJson(AbstractPlacement placement)
         {
             var sb = new StringBuilder();
             sb.Append("{\"tables\":{");
@@ -21,18 +21,18 @@ namespace RectPacking.Helpers
             sb.Append("        },");
 
             sb.Append("\"coas\": [");
-            foreach (var coa in placement.PlacedCOAs)
+            foreach (var coa in placement.Placed)
             {
                 sb.Append("    {");
                 sb.Append("    \"type\": \"COA\",");
-                sb.Append("    \"index\": \"" + placement.PlacedCOAs.IndexOf(coa) + "\",");
+                sb.Append("    \"index\": \"" + placement.Placed.IndexOf(coa) + "\",");
                 sb.Append("    \"X\": \"" + coa.Left + "\",");
                 sb.Append("    \"Y\": \"" + coa.Top + "\",");
                 sb.Append("    \"width\": \"" + coa.Width + "\",");
                 sb.Append("    \"height\": \"" + coa.Height + "\"");
                 sb.Append("    }");
 
-                if (placement.PlacedCOAs.Last() != coa)
+                if (placement.Placed.Last() != coa)
                 {
                     sb.Append("    ,");
                 }
@@ -42,7 +42,7 @@ namespace RectPacking.Helpers
 
             sb.Append("\"commonData\":{");
             sb.Append("    \"total area\": \" "+ placement.VibroTable.Area + "\",");
-            var placedArea = CalculateArea(placement.PlacedCOAs);
+            var placedArea = CalculateArea(placement.Placed);
             sb.Append("    \"placed area\": \" " + placedArea + "\",");
             var persentage = placedArea * 100 / placement.VibroTable.Area;
             sb.Append("    \"persentage\": \"" + persentage + "\"");
@@ -52,7 +52,7 @@ namespace RectPacking.Helpers
             return sb.ToString();
         }
 
-        public static long CalculateArea(List<COA> list )
+        public static long CalculateArea(List<IAction> list )
         {
             return list.Sum(coa => coa.Product.Area);
         }

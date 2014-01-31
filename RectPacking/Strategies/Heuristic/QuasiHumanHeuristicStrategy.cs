@@ -36,7 +36,7 @@ namespace RectPacking.Strategies.Heuristic
 
         private List<Caving> GenerateCavingList(PlacementProcess placement)
         {
-            var cavings = placement.COAs.Select(coa => new Caving(coa, placement)).ToList();
+            var cavings = placement.Left.Select(coa => new Caving(coa, placement)).ToList();
             return cavings;
         }
     }

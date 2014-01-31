@@ -24,7 +24,7 @@ namespace RectPacking.Models
 
         private int CalculateEdgeIndex(COA coa, PlacementProcess placement)
         {
-            return placement.PlacedCOAs.Count(coa.Touches) + coa.TimesItTouches(placement.VibroTable);
+            return placement.Placed.Count(coa.Touches) + coa.TimesItTouches(placement.VibroTable);
         }
 
         private double CalculateDegree(COA coa, PlacementProcess placement)
@@ -38,7 +38,7 @@ namespace RectPacking.Models
            // todo:refactor!
             var table = placement.VibroTable;
 
-            List<COA> placedCOAs = placement.PlacedCOAs;
+            List<COA> placedCOAs = placement.Placed;
 
             var leftArea = new Segment(Segment.Direction.Left);
             var coasLeft = FindLocalFor(coa, placedCOAs, ref leftArea);

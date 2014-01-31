@@ -30,8 +30,8 @@ namespace RectPacking.Tests
             massPlacement.Proceed(new SimpleHeuristicStrategy(), true, "simple");
 
             //no overlapping
-            foreach (var sample in massPlacement.PlacedCOAs)
-                foreach (var pretender in massPlacement.PlacedCOAs)
+            foreach (var sample in massPlacement.Placed)
+                foreach (var pretender in massPlacement.Placed)
                     if (sample != pretender)
                         Assert.False(sample.HasIntersectionWith(pretender));
         }
@@ -52,8 +52,8 @@ namespace RectPacking.Tests
             massPlacement.Proceed(new QuasiHumanHeuristicStrategy(), true, "caving");
 
             //no overlapping
-            foreach (var sample in massPlacement.PlacedCOAs)
-                foreach (var pretender in massPlacement.PlacedCOAs)
+            foreach (var sample in massPlacement.Placed)
+                foreach (var pretender in massPlacement.Placed)
                     if (sample != pretender)
                         Assert.False(sample.HasIntersectionWith(pretender));
         }
@@ -77,8 +77,8 @@ namespace RectPacking.Tests
             massPlacement.Proceed(new SimpleMetaheuristicStrategy(max, toCorners, small), true, "meta");
 
             //no overlapping
-            foreach (var sample in massPlacement.PlacedCOAs)
-                foreach (var pretender in massPlacement.PlacedCOAs)
+            foreach (var sample in massPlacement.Placed)
+                foreach (var pretender in massPlacement.Placed)
                     if (sample != pretender)
                         Assert.False(sample.HasIntersectionWith(pretender));
         }

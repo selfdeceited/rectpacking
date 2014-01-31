@@ -53,9 +53,9 @@ namespace RectPacking.Models
 
         public bool CheckIfHasPointInSameLocation(List<Point> mainPoints)
         {
-            return mainPoints.Any(mp => mp.X == this.X && mp.Y == this.Y);
+            return mainPoints
+                .Where(point => this != point).
+                Aggregate(false, (current, point) => current || point.X == this.X && point.Y == this.Y);
         }
-
-
     }
 }

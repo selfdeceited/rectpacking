@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using RectPacking.Helpers;
@@ -40,21 +41,21 @@ namespace RectPacking.Tests
             var points = new List<Point> {new Point(50, 50, true)};
             placement.CreateCOAsForPoints(points, false);
 
-            Assert.NotNull(placement.COAs);
+            Assert.NotNull(placement.Left);
             const int numberOfCOAs = 16;
-            Assert.AreEqual(placement.COAs.Count, numberOfCOAs);         // 8 positions * 2 products = 32
-            Assert.AreEqual(placement.COAs.Count(coa => coa.IsValid), numberOfCOAs); //all are valid
+            Assert.AreEqual(placement.Left.Count, numberOfCOAs);         // 8 positions * 2 products = 32
+            Assert.AreEqual(placement.Left.Count(coa => coa.IsValid), numberOfCOAs); //all are valid
             
-            Assert.AreEqual(placement.COAs.Count(coa => coa.Rotated), numberOfCOAs / 2); //half of them are rotated
-            Assert.AreEqual(placement.COAs.Count(coa => coa.Product.Name == "Sample 1"), numberOfCOAs / 2); //half of them are of Sample 1
-            Assert.AreEqual(placement.COAs.Count(coa => coa.Product.Name == "Sample 2"), numberOfCOAs / 2); //half of them are of Sample 2
-            Assert.AreEqual(placement.COAs.Count(coa => coa.Corner == COA.CornerType.TopLeft), numberOfCOAs / 4); //each fourth has the main point in top left corner
-            Assert.AreEqual(placement.COAs.Count(coa => coa.Corner == COA.CornerType.TopLeft), numberOfCOAs / 4); //in top right corner
-            Assert.AreEqual(placement.COAs.Count(coa => coa.Corner == COA.CornerType.DownLeft), numberOfCOAs / 4); //down left corner
-            Assert.AreEqual(placement.COAs.Count(coa => coa.Corner == COA.CornerType.DownRight), numberOfCOAs / 4); //down right corner
+            Assert.AreEqual(placement.Left.Count(coa => coa.Rotated), numberOfCOAs / 2); //half of them are rotated
+            Assert.AreEqual(placement.Left.Count(coa => coa.Product.Name == "Sample 1"), numberOfCOAs / 2); //half of them are of Sample 1
+            Assert.AreEqual(placement.Left.Count(coa => coa.Product.Name == "Sample 2"), numberOfCOAs / 2); //half of them are of Sample 2
+            Assert.AreEqual(placement.Left.Count(coa => coa.Corner == COA.CornerType.TopLeft), numberOfCOAs / 4); //each fourth has the main point in top left corner
+            Assert.AreEqual(placement.Left.Count(coa => coa.Corner == COA.CornerType.TopLeft), numberOfCOAs / 4); //in top right corner
+            Assert.AreEqual(placement.Left.Count(coa => coa.Corner == COA.CornerType.DownLeft), numberOfCOAs / 4); //down left corner
+            Assert.AreEqual(placement.Left.Count(coa => coa.Corner == COA.CornerType.DownRight), numberOfCOAs / 4); //down right corner
             //todo: now some of the COAs as is
-            Assert.AreEqual(placement.COAs.First().Corner, COA.CornerType.TopRight);
-            Assert.False(placement.COAs.First().Rotated);
+            Assert.AreEqual(placement.Left.First().Corner, COA.CornerType.TopRight);
+            Assert.False(placement.Left.First().Rotated);
 
         }
 
@@ -66,17 +67,17 @@ namespace RectPacking.Tests
             var usualPlacement = new PlacementProcess(table, 
                 new List<Product>{new Product(300, 350)});
             usualPlacement.CreateCOAsForPoints();
-            Assert.AreEqual(usualPlacement.COAs.Count, 4);
+            Assert.AreEqual(usualPlacement.Left.Count, 4);
 
             var impossibleplacement = new PlacementProcess(table, 
                 new List<Product> { new Product(500, 10) });
             impossibleplacement.CreateCOAsForPoints();
-            Assert.AreEqual(impossibleplacement.COAs.Count, 0);
+            Assert.AreEqual(impossibleplacement.Left.Count, 0);
 
             var goodPlacement = new PlacementProcess(table,
                 new List<Product> { new Product(20, 200) });
             goodPlacement.CreateCOAsForPoints();
-            Assert.AreEqual(goodPlacement.COAs.Count, 8);
+            Assert.AreEqual(goodPlacement.Left.Count, 8);
 
             //mass stuff
             var massPlacement = new PlacementProcess(table, new List<Product>
@@ -88,7 +89,7 @@ namespace RectPacking.Tests
                 new Product(200, 400),//4
             });
             massPlacement.CreateCOAsForPoints();
-            Assert.AreEqual(massPlacement.COAs.Count, 24);
+            Assert.AreEqual(massPlacement.Left.Count, 24);
 
         }
 
@@ -98,7 +99,7 @@ namespace RectPacking.Tests
             var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
             placement.Proceed(new EmptyStrategy(), true);
-            Assert.AreEqual(placement.PlacedCOAs.Count, 2);
+            Assert.AreEqual(placement.Placed.Count, 2);
             //todo:full placement
 
         }

@@ -12,25 +12,25 @@ using RectPacking.Strategies;
 
 namespace RectPacking.Operations
 {
-    public class PlacementProcess
+    public class PlacementProcess : AbstractPlacement
     {
-        public VibroTable VibroTable { get; set; }
-        public List<Product> ProductList { get; set; }
+
         public List<Point> MainPoints { get; set; }
-        public string ProcessState { get; set; }//to abstract class
-        public List<COA> COAs { get; set; }
-        public List<COA> PlacedCOAs { get; set; }
+        public new List<COA> Left { get; set; }
+        public new List<COA> Placed { get; set; }
 
         public PlacementProcess(VibroTable vibroTable, List<Product> productList )
+            : base(vibroTable, productList)
         {
-            this.VibroTable = vibroTable;
-            this.ProductList = productList;
-            this.ProcessState = "Initialized";//todo: work through watching state like that
-            //can be added event handlers everytime process state is changed to perform logs
             this.MainPoints = new List<Point>();
-            this.COAs = new List<COA>();
-            this.PlacedCOAs = new List<COA>();
             this.CreateInitialMainPoints(vibroTable);
+            this.Left = ToCOAList(base.Left);
+            this.Placed = ToCOAList(base.Placed);
+        }
+       
+        public List<COA> ToCOAList(List<IAction> initial)
+        {
+            return initial.Cast<COA>().ToList();
         }
 
         public void CreateInitialMainPoints(VibroTable vibroTable)
@@ -41,10 +41,10 @@ namespace RectPacking.Operations
             this.MainPoints.Add(new Point(vibroTable.Width, vibroTable.Height, true));
         }
 
-        public void Proceed(Strategy manager, bool debug = false, string folderTag = null)
+        public override void Proceed(Strategy manager, bool debug = false, string folderTag = null)
         {
 
-            var image = new ImageHelper(this, folderTag);
+            Image = new ImageHelper(this, folderTag);
             var newPoints = this.MainPoints;
             var best = SampleBestCOA();//sample is used to get into the cycle
 
@@ -57,13 +57,13 @@ namespace RectPacking.Operations
                 
                 if (best != null)
                 {
-                    PlacedCOAs.Add(best);
-                    if (debug) image.UpdateStatus(this, best);
+                    Placed.Add(best);
+                    if (debug) Image.UpdateStatus(this, best);
                     newPoints = ManagePointsFor(best);
                     DeleteCOAsWith(best.Product);
                 }
             }
-            if (debug) image.UpdateStatus(this);
+            if (debug) Image.UpdateStatus(this);
             var json = Export.ToJson(this);
             var folder = string.IsNullOrEmpty(folderTag) ? "" :  folderTag + "\\";
             var textFile = new System.IO.StreamWriter("C:\\test\\" + folder + "data.json");
@@ -73,16 +73,53 @@ namespace RectPacking.Operations
 
         }
 
+        public override void ProceedFrom(Strategy manager, List<IAction> placed, ImageHelper image, int iteration, bool debug = false)
+        {
+            this.Image = image;
+            this.Iteration = iteration;
+            var newPoints = MainPoints;
+            //+ generating points for previous iterations 
+            foreach (var action in placed)
+            {
+                var coa = new COA(action.Product, new Point(action.Left, action.Top), COA.CornerType.TopLeft, false);
+                this.MainPoints.AddRange(coa.Points);
+                this.Placed.Add(coa);
+            }
+            //+ link to usual Proceed cycle
+            var best = SampleBestCOA();
+            ManagePoints();
+
+            while (ResumePlacement(best))
+            {
+                iteration++;
+                CreateCOAsForPoints(newPoints);
+                best = ChooseBestCOA(manager, iteration);
+
+                if (best != null)
+                {
+                    Placed.Add(best);
+                    if (debug) Image.UpdateStatus(this, best);
+                    newPoints = ManagePointsFor(best);
+                    DeleteCOAsWith(best.Product);
+                }
+
+            }
+
+
+        }
+
+
+
         public bool ResumePlacement(COA best)
         {
-            return best!=null;//todo: Stopping criteria?
+            return best != null;//todo: Stopping criteria?
         }
 
         public void CreateCOAsForPoints(List<Point> points = null, bool withConstrains = true)
         {
             if (points == null) 
                 points = this.MainPoints;
-            List<COA> list = this.COAs;
+            List<COA> list = this.Left;
             foreach (var point in points)//because points can differ
             {
                 foreach (var product in this.ProductList)
@@ -92,18 +129,29 @@ namespace RectPacking.Operations
             }
             if (withConstrains)
                 list = Filters.FilterCOAs(this);
-            this.COAs = list;
+            this.Left = list;
         }
 
         public COA ChooseBestCOA(Strategy manager, int iteration)
         {
             manager.UpdateIterationStatFor(iteration, this);
-            if (!COAs.Any()) 
+            if (!Left.Any()) 
                 return null;
 
-            return (COA) manager.Solve(COAs);
+            return (COA) manager.Solve(Left);
         }
 
+        public void ManagePoints()
+        {
+            //двойной цикл по всем точкам: если i != j и совпадает с другой, удалить
+                for (int j = 0; j < MainPoints.Count; j++)
+                {
+                    if (MainPoints[j].CheckIfHasPointInSameLocation(MainPoints))
+                    {
+                        MainPoints.RemoveAt(j);
+                    }
+                }
+        }
         public List<Point> ManagePointsFor(COA best)
         {
             var newPoints = new List<Point>();
@@ -112,7 +160,7 @@ namespace RectPacking.Operations
                 //check if has valid COAs from this point
                 for (int index = 0; index < MainPoints.Count; index++)
                 {
-                    var hasValidCOAs = COAs.Any(c => c.MainPoint == MainPoints[index]);
+                    var hasValidCOAs = Left.Any(c => c.MainPoint == MainPoints[index]);
                     if(!hasValidCOAs) MainPoints.RemoveAt(index);
                 }
 
@@ -127,7 +175,7 @@ namespace RectPacking.Operations
         public void DeleteCOAsWith(Product bestProduct)
         {
             this.ProductList = Product.RemoveFromListWithId(bestProduct.Identifier, this.ProductList);
-            this.COAs = COA.RemoveFromListWithId(bestProduct.Identifier, this.COAs);
+            this.Left = COA.RemoveFromListWithId(bestProduct.Identifier, this.Left);
         }
 
         public COA SampleBestCOA()
@@ -135,11 +183,6 @@ namespace RectPacking.Operations
             const int greatNumber = 1000000;
             return new COA(new Product(greatNumber, greatNumber, false),
                 new Point(), COA.CornerType.TopLeft, false);
-        }
-
-        public void RevertCOA(COA a)
-        {
-            this.COAs.Remove(a);
         }
     }
 }

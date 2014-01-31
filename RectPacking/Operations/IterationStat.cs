@@ -18,10 +18,10 @@ namespace RectPacking.Operations
 
         public IterationStat(PlacementProcess placement, int Iteration)
         {
-            this.Left = placement.COAs;
-            this.Placed = placement.PlacedCOAs;
+            this.Left = placement.Left;
+            this.Placed = placement.Placed;
             this.TotalArea = placement.VibroTable.Area;
-            this.PlacedArea = placement.PlacedCOAs.Sum(coa => coa.Product.Area);
+            this.PlacedArea = placement.Placed.Sum(coa => coa.Product.Area);
             this.Iteration = Iteration;
             this.Percentage = this.PlacedArea/this.TotalArea*100;
         }

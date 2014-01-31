@@ -35,5 +35,19 @@ namespace RectPacking.Tests
         {
             return new VibroTable(400, 300);
         }
+
+        public static List<Product> CreateRandomProdicts(int count)
+        {
+            var products = new List<Product>();
+            for (int i = 0; i < count; i++)
+            {
+                var randX = new Random((int)(DateTime.Now.ToBinary() / 215 - i));
+                var randY = new Random((int)(1234 + DateTime.Now.Millisecond + 3 * i));
+                var randomX = randX.Next(20, 90);
+                var randomY = randY.Next(10, 70);
+                products.Add(new Product("product" + i, randomX, randomY));
+            }
+            return products;
+        }
     }
 }

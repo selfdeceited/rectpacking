@@ -18,7 +18,7 @@ namespace RectPacking.Helpers
         private Bitmap TableBitmap { get; set; }
         private string FolderTag { get; set; }
 
-        public ImageHelper(PlacementProcess process, string folderTag = null)
+        public ImageHelper(AbstractPlacement process, string folderTag = null)
         {
             TableBitmap = new Bitmap(process.VibroTable.Width, process.VibroTable.Height);
 
@@ -28,11 +28,11 @@ namespace RectPacking.Helpers
             Save(folderTag);
         }
 
-        public void UpdateStatus(PlacementProcess process, COA bestCOA = null)
+        public void UpdateStatus(AbstractPlacement process, IAction bestCOA = null)
         {
             if (bestCOA == null)
             {
-                foreach (var coa in process.PlacedCOAs)
+                foreach (var coa in process.Placed)
                 {
                     TableBitmap = DrawRectangle(TableBitmap, coa.ToRectangle(), RandomColor());
                 }
@@ -40,10 +40,15 @@ namespace RectPacking.Helpers
                 return;
             }
             TableBitmap = DrawRectangle(TableBitmap, bestCOA.ToRectangle(), RandomColor());
-            foreach (var point in process.MainPoints)
+
+            if (process is PlacementProcess)
             {
-                TableBitmap = DrawPoint(TableBitmap, Color.Red, point);
+                foreach (var point in (process as PlacementProcess).MainPoints)
+                {
+                    TableBitmap = DrawPoint(TableBitmap, Color.Red, point);
+                }
             }
+
             Save(this.FolderTag,(++count).ToString());
         }
 

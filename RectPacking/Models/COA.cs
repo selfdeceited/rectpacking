@@ -98,7 +98,7 @@ namespace RectPacking.Models
         public static List<COA> RemoveFromListWithId(int id, List<COA> list)
         {
             var coasToDelete = list.Where(coa => coa.Product.Identifier == id).ToArray();
-            for (int i=0; i < coasToDelete.Count() ;i++)
+            for (int i = 0; i < coasToDelete.Count(); i++)
             {
                 list.Remove(coasToDelete[i]);
             }
@@ -153,5 +153,6 @@ namespace RectPacking.Models
             var str = Product.Width + "*" + Product.Height + " c" + Corner + " on p" + MainPoint.X + "," + MainPoint.Y;
             return str;
         }
+
     }
 }

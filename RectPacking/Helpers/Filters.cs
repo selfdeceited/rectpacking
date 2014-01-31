@@ -12,12 +12,12 @@ namespace RectPacking.Helpers
     {
         public static List<COA> FilterCOAs(PlacementProcess placement)
         {
-            IEnumerable<COA> coaList = placement.COAs;
+            IEnumerable<COA> coaList = placement.Left;
             FilterIntersectionWithTable(placement.VibroTable, ref coaList);
             RemoveInvalidCOAs(ref coaList);//todo: don't like it dublicated
-            FilterIntersectionWithPlacedCOAs(placement.PlacedCOAs, ref coaList);
+            FilterIntersectionWithPlacedCOAs(placement.Placed, ref coaList);
             RemoveInvalidCOAs(ref coaList);
-            FilterComplexIntersection(placement.PlacedCOAs, ref coaList);
+            FilterComplexIntersection(placement.Placed, ref coaList);
             RemoveInvalidCOAs(ref coaList);
             return coaList.ToList();
         }
