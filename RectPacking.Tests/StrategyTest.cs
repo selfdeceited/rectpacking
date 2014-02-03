@@ -67,7 +67,6 @@ namespace RectPacking.Tests
             var massPlacementWithCavingHeuristics = new PlacementProcess(SampleInitializer.CreateVibroTable(), newProducts);
             massPlacementWithCavingHeuristics.Proceed(new QuasiHumanHeuristicStrategy(), true);
 
-
             foreach (var sample in massPlacementWithCavingHeuristics.Placed)
                 foreach (var pretender in massPlacementWithCavingHeuristics.Placed)
                     if (sample != pretender)
@@ -80,14 +79,13 @@ namespace RectPacking.Tests
         [Test]
         public void ComplexPlacementTest()
         {
-            var table = new VibroTable(700, 700);
-            var products = SampleInitializer.CreateRandomProdicts(260);
+            var table = new VibroTable(400, 300);
+            var products = SampleInitializer.CreateRandomProdicts(50);
             var simple = new SimplePlacementProcess(table, products);
             var coaPlacement = new PlacementProcess(table, products);
             var complexPlacement = new ComplexPlacementProcess(table, products, simple, coaPlacement);
             complexPlacement.Proceed(new EmptyStrategy(), true);
-            //must be taken 6 first : 100-200, 300-100, 200-300  50-50, 50-50, 100-50
-            //Assert.AreEqual(complexPlacement.Placed.Count, 6);
+
         }
     }
 }

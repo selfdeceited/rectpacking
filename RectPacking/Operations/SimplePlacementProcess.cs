@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Services;
 using System.Text;
 using System.Threading.Tasks;
 using RectPacking.Helpers;
@@ -16,10 +18,12 @@ namespace RectPacking.Operations
         public int CurrentXOffset { get; set; }
         public int maxHeight { get; set; }
         public bool stoppingTrigger { get; set; }
+        public List<Action> NotPlaced { get; set; }
 
         public SimplePlacementProcess(VibroTable vibroTable, List<Product> productList) : base(vibroTable, productList)
         {
             stoppingTrigger = false;
+            this.NotPlaced = new List<Action>();
         }
 
         public override void Proceed(Strategy manager, bool debug = false, string folderTag = null)
@@ -58,6 +62,8 @@ namespace RectPacking.Operations
 
             textFile.Write(json);
             textFile.Close();
+            this.Image = image;
+            this.Left.AddRange(this.NotPlaced);
         }
 
         public override void ProceedFrom(Strategy manager, List<IAction> placed, ImageHelper image, int iteration, bool debug = false)
@@ -69,9 +75,12 @@ namespace RectPacking.Operations
         {
             if (!Left.Any() || stoppingTrigger) return null;
             var action = (Action)Left.First();
+
+           // TryPlace();//to the right
+           // Enter();//down
             if (CurrentXOffset + action.Width < VibroTable.Width)  //to the right; if is fit to the right side
             {
-                if(action.CanContainIn(VibroTable, CurrentXOffset, CurrentYOffset))
+                if (action.CanContainIn(VibroTable, CurrentXOffset, CurrentYOffset))
                 {
                     action.Top = CurrentYOffset;
                     action.Left = CurrentXOffset;
@@ -79,8 +88,15 @@ namespace RectPacking.Operations
                     if (action.Height > maxHeight)
                         maxHeight = action.Height;
                 }
+                else
+                {
+                    //Take other
+                    NotPlaced.Add(action);
+                    Left.Remove(action);
+                    return Place(iteration);
+                }
             }
-            else//try to increase Y Offset - if it could, like "Enter"
+            else//try to increase Y Offset - if it could, like "Enter" action
             {
                 if (action.CanContainIn(VibroTable, 0, CurrentYOffset + maxHeight))
                 {
@@ -89,10 +105,13 @@ namespace RectPacking.Operations
                     maxHeight = 0;
                     action.Top = CurrentYOffset;
                     action.Left = CurrentXOffset;
+
+                    CurrentXOffset += action.Width;
                 }
                 else
                 {
                     stoppingTrigger = true;
+                    return null;
                 }
             }
 

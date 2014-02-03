@@ -24,6 +24,7 @@ namespace RectPacking.Operations
         {
             var initial = Placements[0];
             initial.Proceed(new EmptyStrategy(), debug);
+            //todo: ProceedUntil()
             for (int index = 1; index < Placements.Count; index++)
             {
                 Placements[index].ProceedFrom(manager,
