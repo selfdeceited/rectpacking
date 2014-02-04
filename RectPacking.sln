@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.20617.1 PREVIEW
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectPacking", "RectPacking\RectPacking.csproj", "{0EF94878-E7B1-4699-8C52-2C0CE6DEFEAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectPacking.Tests", "RectPacking.Tests\RectPacking.Tests.csproj", "{1E99242F-F7FC-4658-89FD-05C050D8CD9A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EF94878-E7B1-4699-8C52-2C0CE6DEFEAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EF94878-E7B1-4699-8C52-2C0CE6DEFEAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EF94878-E7B1-4699-8C52-2C0CE6DEFEAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EF94878-E7B1-4699-8C52-2C0CE6DEFEAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E99242F-F7FC-4658-89FD-05C050D8CD9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E99242F-F7FC-4658-89FD-05C050D8CD9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E99242F-F7FC-4658-89FD-05C050D8CD9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E99242F-F7FC-4658-89FD-05C050D8CD9A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
