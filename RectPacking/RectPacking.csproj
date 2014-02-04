@@ -55,6 +55,7 @@
     <Compile Include="Models\IRated.cs" />
     <Compile Include="Models\Point.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Room.cs" />
     <Compile Include="Models\VibroTable.cs" />
     <Compile Include="Operations\AbstractPlacement.cs" />
     <Compile Include="Operations\ComplexPlacementProcess.cs" />

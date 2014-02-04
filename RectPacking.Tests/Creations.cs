@@ -100,7 +100,7 @@ namespace RectPacking.Tests
             var validCOA = new COA(stair, mainPoint, COA.CornerType.TopRight, true);
             Assert.True(validCOA.IsValid);
             var COAs = new List<COA>();
-            COA.ToPack(stair, mainPoint, ref COAs);
+            COA.ToPack(new VibroTable(1,1), stair, mainPoint, ref COAs);
             foreach (var coa in COAs)
                 Assert.True(coa.IsValid);
 

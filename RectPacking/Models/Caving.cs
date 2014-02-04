@@ -15,7 +15,7 @@ namespace RectPacking.Models
         public int EdgeIndex { get; set; }
 
         public Caving(COA coa, PlacementProcess placement)
-            : base(coa.Product,coa.MainPoint, coa.Corner, false)
+            : base(coa.Product,coa.MainPoint, coa.Corner, false, coa.VibroTable)
             //rotated is false, because when you use created COA, it has already rotated product;
         {
             this.Degree = CalculateDegree(coa, placement);

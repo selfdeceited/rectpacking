@@ -24,6 +24,7 @@ namespace RectPacking.Models
         public CornerType Corner { get; set; }
         public bool Rotated { get; set; }
         public bool IsValid { get; set; }
+        public VibroTable VibroTable { get; set; }
 
 
         //implemented members
@@ -34,20 +35,19 @@ namespace RectPacking.Models
         public double Distance { get; set; }
 
 
-        public COA(Product Product, Point MainPoint, CornerType CornerType, bool Rotated)
+        public COA(Product Product, Point MainPoint, CornerType CornerType, bool Rotated, VibroTable VibroTable = null)
         {
             this.Product = Product.Dublicate();
             // dublication is perfomed to prevent making links to initial product;
             // because of packing COA creation while rotating initial product
             // can leave it rotated when it doesn't need to be rotated
             if (Rotated) this.Product.Rotate();
-
+            this.VibroTable = VibroTable;
             this.MainPoint = MainPoint;
             this.Corner = CornerType;
             this.Rotated = Rotated;
             this.IsValid = MainPoint != null && MainPoint.IsMain;
             this.Points = CalculatePoints(CornerType, MainPoint, this.Product);
-
 
             //implemented members in the constructor
             var corner = CornerType.ToString();
@@ -61,14 +61,14 @@ namespace RectPacking.Models
         {
         }
 
-        public static void ToPack(Product Product, Point Point, ref List<COA> list)
+        public static void ToPack(VibroTable vibroTable, Product Product, Point Point, ref List<COA> list)
         {
             var corners = (CornerType[])Enum.GetValues(typeof (CornerType));
             foreach (var corner in corners)
             {
                 //TODO: refactor!
-                list.Add(new COA(Product, Point, corner, false)); 
-                list.Add(new COA(Product, Point, corner, true));
+                list.Add(new COA(Product, Point, corner, false, vibroTable));
+                list.Add(new COA(Product, Point, corner, true, vibroTable));
             }
         }
 
@@ -154,5 +154,11 @@ namespace RectPacking.Models
             return str;
         }
 
+        public bool HasIntersectionWith(Rectangle pretender)
+        {
+            var sample = this.ToRectangle();
+            if (sample.IntersectsWith(pretender)) return true;
+            return false;
+        }
     }
 }
