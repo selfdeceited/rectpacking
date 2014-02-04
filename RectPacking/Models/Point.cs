@@ -29,7 +29,7 @@ namespace RectPacking.Models
         }
         public bool IsWithin(VibroTable vibroTable)
         {
-            return this.IsWithinIncludedArea(0, vibroTable.Width, 0, vibroTable.Height);
+            return this.IsWithinIncludedArea(vibroTable.Left, vibroTable.Left + vibroTable.Width, vibroTable.Top, vibroTable.Top+vibroTable.Height);
         }
 
         public bool IsWithinArea(int xMin, int xMax, int yMin, int yMax)
