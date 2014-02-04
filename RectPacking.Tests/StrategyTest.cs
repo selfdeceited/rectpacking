@@ -8,6 +8,7 @@ using RectPacking.Models;
 using RectPacking.Operations;
 using RectPacking.Strategies;
 using RectPacking.Strategies.Heuristic;
+using RectPacking.Strategies.Metaheuristic;
 
 namespace RectPacking.Tests
 {
@@ -86,6 +87,17 @@ namespace RectPacking.Tests
             var complexPlacement = new ComplexPlacementProcess(table, products, simple, coaPlacement);
             complexPlacement.Proceed(new EmptyStrategy(), true);
 
+        }
+
+        [Test]
+        public void MultiTable()
+        {
+            var room = new Room(500, 500);
+            room.PlaceTable(new VibroTable(100,200), 0, 0);
+            room.PlaceTable(new VibroTable(200, 200), 300, 300);
+            var products = SampleInitializer.CreateRandomProdicts(180);
+            var placement = new PlacementProcess(room, products);
+            placement.ProceedRoom(new EmptyStrategy(), true);
         }
     }
 }

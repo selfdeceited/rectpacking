@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,14 +20,32 @@ namespace RectPacking.Helpers
          //   RemoveInvalidCOAs(ref coaList);
             FilterComplexIntersection(placement.Placed, ref coaList);
             RemoveInvalidCOAs(ref coaList);
+
+            if (placement.VibroTable is Room)
+            {
+                var room = placement.VibroTable as Room;
+                FilterIntersectionWithOtherTables(room.PlacedTables, ref coaList);
+                RemoveInvalidCOAs(ref coaList);
+            }
             return coaList.ToList();
+        }
+
+        private static void FilterIntersectionWithOtherTables(List<Rectangle> placedTables, ref IEnumerable<COA> coaList)
+        {
+            foreach (var coa in coaList)
+            {
+                foreach (var rectangle in placedTables)
+                {
+                    coa.IsValid = coa.IsValid && !coa.HasIntersectionWith(rectangle);
+                }
+            }
         }
 
         public static void FilterIntersectionWithTable(VibroTable vibroTable, ref IEnumerable<COA> coaList )
         {
             foreach (var coa in coaList)
             {
-                 coa.IsValid = coa.Points.TrueForAll(point => point.IsValid && point.IsWithin(vibroTable));
+                 coa.IsValid = coa.Points.TrueForAll(point => point.IsValid && point.IsWithin(coa.VibroTable));
             }
         }
 

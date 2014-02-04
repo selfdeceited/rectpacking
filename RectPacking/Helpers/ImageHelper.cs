@@ -34,12 +34,13 @@ namespace RectPacking.Helpers
             {
                 foreach (var coa in process.Placed)
                 {
-                    TableBitmap = DrawRectangle(TableBitmap, coa.ToRectangle(), RandomColor());
+                    TableBitmap = DrawAction(process.VibroTable, TableBitmap, coa.ToRectangle(), RandomColor());
+                    //DrawRectangle(TableBitmap, coa.ToRectangle(), RandomColor());
                 }
                 Save(this.FolderTag, "final");
                 return;
             }
-            TableBitmap = DrawRectangle(TableBitmap, bestCOA.ToRectangle(), RandomColor());
+            TableBitmap = DrawAction(process.VibroTable, TableBitmap, bestCOA.ToRectangle(), RandomColor());
 
             if (process is PlacementProcess)
             {
@@ -51,6 +52,14 @@ namespace RectPacking.Helpers
 
             Save(this.FolderTag,(++count).ToString());
         }
+
+        private Bitmap DrawAction(VibroTable vibroTable, Bitmap tableBitmap, Rectangle initialRectangle, Color randomColor)
+        {
+            var newRect = new Rectangle(initialRectangle.Left, initialRectangle.Top,
+                initialRectangle.Width, initialRectangle.Height);
+            return DrawRectangle(TableBitmap, newRect, RandomColor());
+        }
+
 
         private static Bitmap DrawRectangle(Bitmap tableBitmap, Rectangle rectangle, Color color, bool isTable = true)
         {
@@ -145,6 +154,12 @@ namespace RectPacking.Helpers
             };
             var index = new Random(DateTime.Now.Millisecond).Next(appropriateColors.Count);
             return appropriateColors.ElementAt(index);
+        }
+
+        public void DrawTable(VibroTable vibroTable)
+        {
+            var rect = new Rectangle(vibroTable.Left, vibroTable.Top, vibroTable.Width, vibroTable.Height);
+            DrawRectangle(this.TableBitmap, rect, Color.Navy);
         }
     }
 }

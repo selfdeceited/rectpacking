@@ -35,10 +35,19 @@ namespace RectPacking.Operations
 
         public void CreateInitialMainPoints(VibroTable vibroTable)
         {
-            this.MainPoints.Add(new Point(0, 0, true));
-            this.MainPoints.Add(new Point(vibroTable.Width, 0, true));
-            this.MainPoints.Add(new Point(0, vibroTable.Height, true));
-            this.MainPoints.Add(new Point(vibroTable.Width, vibroTable.Height, true));
+            this.MainPoints.Add(new Point(vibroTable.Left, vibroTable.Top, true));
+            this.MainPoints.Add(new Point(vibroTable.Left + vibroTable.Width, vibroTable.Top, true));
+            this.MainPoints.Add(new Point(vibroTable.Left, vibroTable.Top + vibroTable.Height, true));
+            this.MainPoints.Add(new Point(vibroTable.Left + vibroTable.Width, vibroTable.Top + vibroTable.Height, true));
+        }
+
+        public IEnumerable<Point> CreateInitialMainPoints()
+        {
+            var vibroTable = this.VibroTable;
+            yield return (new Point(vibroTable.Left, vibroTable.Top, true));
+            yield return (new Point(vibroTable.Left + vibroTable.Width, vibroTable.Top, true));
+            yield return (new Point(vibroTable.Left, vibroTable.Top + vibroTable.Height, true));
+            yield return (new Point(vibroTable.Left + vibroTable.Width, vibroTable.Top + vibroTable.Height, true));
         }
 
         public override void Proceed(Strategy manager, bool debug = false, string folderTag = null)
@@ -77,27 +86,61 @@ namespace RectPacking.Operations
         {
             this.Image = image;
             this.Iteration = iteration;
+
             var newPoints = MainPoints;
-            //+ generating points for previous iterations 
-            foreach (var action in placed)
+            if (placed.TrueForAll(iAction => iAction is COA))
             {
-                var coa = new COA(action.Product, new Point(action.Left, action.Top), COA.CornerType.TopLeft, false);
-                this.MainPoints.AddRange(coa.Points);
-                this.Placed.Add(coa);
+                var newPlaced = placed.OfType<COA>().ToList();
+                foreach (var action in newPlaced)
+                {//перенести все точки
+                    foreach (var point in action.Points)
+                    {
+                        point.X += action.VibroTable.Left;
+                        point.Y += action.VibroTable.Top;
+                        MainPoints.Add(point);
+                    }
+//                    this.MainPoints.AddRange(action.Points);
+                }
+                this.Placed = newPlaced;
             }
+            else//если нет, до делаем их таковыми
+            {
+                this.Placed.Clear();
+
+                foreach (var action in placed)
+                {
+                    var coa = new COA(action.Product, new Point(action.Left, action.Top), COA.CornerType.TopLeft, false, this.VibroTable);
+                    this.Placed.Add(coa);
+                }
+
+                foreach (var action in this.Placed)
+                {
+                    foreach (var point in action.Points)
+                    {
+                        point.X += action.VibroTable.Left;
+                        point.Y += action.VibroTable.Top;
+                        MainPoints.Add(point);
+                    }
+                }
+
+            }
+            MainPoints.AddRange(CreateInitialMainPoints());
+
+            //+ generating points for previous iterations 
+
             //+ link to usual Proceed cycle
             var best = SampleBestCOA();
             ManagePoints();
 
             while (ResumePlacement(best))
             {
-                iteration++;
+                this.Iteration++;
                 CreateCOAsForPoints(newPoints);
                 best = ChooseBestCOA(manager, iteration);
 
                 if (best != null)
                 {
-                    Placed.Add(best);
+                    this.Placed.Add(best);
                     if (debug) Image.UpdateStatus(this, best);
                     newPoints = ManagePointsFor(best);
                     DeleteCOAsWith(best.Product);
@@ -105,10 +148,9 @@ namespace RectPacking.Operations
 
             }
 
-
+            if (debug) Image.UpdateStatus(this);
+            base.Placed = this.Placed.Cast<IAction>().ToList();
         }
-
-
 
         public bool ResumePlacement(COA best)
         {
@@ -124,7 +166,7 @@ namespace RectPacking.Operations
             {
                 foreach (var product in this.ProductList)
                 {
-                    COA.ToPack(product, point, ref list);
+                    COA.ToPack(this.VibroTable, product, point, ref list);
                 }
             }
             if (withConstrains)

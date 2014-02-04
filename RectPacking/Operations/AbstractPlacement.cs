@@ -11,6 +11,7 @@ namespace RectPacking.Operations
 {
     public abstract class AbstractPlacement
     {
+        public Room Room { get; set; }
         public ImageHelper Image { get; set; }
         public List<IAction> Left { get; set; }
         public List<IAction> Placed { get; set; }
@@ -20,15 +21,42 @@ namespace RectPacking.Operations
 
         public AbstractPlacement(VibroTable vibroTable, List<Product> productList)
         {
-            this.VibroTable = vibroTable;
+            if (vibroTable is Room)
+            {
+                this.Room = vibroTable as Room;
+            }
+            else
+            {
+                this.VibroTable = vibroTable;
+            }
             this.ProductList = productList;
             this.Left = new List<IAction>();
             this.Placed = new List<IAction>();
             
         }
-
         public abstract void Proceed(Strategy manager, bool debug = false, string folderTag = null);
         public abstract void ProceedFrom(Strategy manager, List<IAction> placed, ImageHelper image, int iteration, bool debug = false);
+
+        public virtual void ProceedRoom(Strategy manager, bool debug = false, string folderTag = null)
+        {
+            var room = this.Room;
+            if (room == null) return;
+
+            this.VibroTable = room;
+            this.Image = new ImageHelper(this);
+
+
+            for (int i = 0; i < room.VibroTables.Count; i++)
+            {
+                this.VibroTable = room.VibroTables[i];
+                this.Image.DrawTable(this.VibroTable);
+                ProceedFrom(manager, this.Placed, this.Image, this.Iteration, debug);
+            }
+            room.CreateBounds();
+            //todo: Create New Bounds in the place and shape for tables and place in filters is this.vibrotable is room;
+            this.VibroTable = room;
+            ProceedFrom(manager, this.Placed, this.Image, this.Iteration, debug);
+        }
     }
 
 }

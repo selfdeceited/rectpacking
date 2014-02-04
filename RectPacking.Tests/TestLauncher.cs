@@ -18,7 +18,7 @@ namespace RectPacking.Tests
         public void HighLoadPlacement()
         {
             var products = new List<Product>();
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 180; i++)
             {
                 var randX = new Random((int)(DateTime.Now.ToBinary() / 215 - i));
                 var randY = new Random((int)(1234 + DateTime.Now.Millisecond + 3 * i));
@@ -40,7 +40,7 @@ namespace RectPacking.Tests
         public void CavingHighLoadPlacement()
         {
             var products = new List<Product>();
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 180; i++)
             {
                 var randX = new Random((int)(DateTime.Now.ToBinary() / 215 - i));
                 var randY = new Random((int)(1234 + DateTime.Now.Millisecond + 3 * i));
@@ -61,7 +61,7 @@ namespace RectPacking.Tests
         public void MetaHeuristicsHighLoadPlacement()
         {
             var products = new List<Product>();
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 180; i++)
             {
                 var randX = new Random((int)(DateTime.Now.ToBinary() / 215 - i));
                 var randY = new Random((int)(1234 + DateTime.Now.Millisecond + 3 * i));
