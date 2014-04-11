@@ -17,9 +17,22 @@ namespace RectPacking.Models
         public string Name { get; set; }
         public long Area { get; set; }
         public bool IsValid { get; set; }
+        public TimeSpan FreezeTime { get; set; }
+
         public Product(string Name, int Width, int Height, bool increaseIdentity = true)
         {
+            this.FreezeTime = new TimeSpan(0, 30, 0);
             this.Name = Name;
+            this.Width = Width;
+            this.Height = Height;
+            this.Area = Width * Height;
+            this.IsValid = Width > 0 && Height > 0;
+            this.Identifier = increaseIdentity ? ++identityCount : identityCount;
+        }
+        public Product(int MinutesToFreeze, string Name, int Width, int Height, bool increaseIdentity = true)
+        {
+            this.Name = Name;
+            this.FreezeTime = new TimeSpan(0, MinutesToFreeze, 0);
             this.Width = Width;
             this.Height = Height;
             this.Area = Width * Height;
@@ -28,6 +41,7 @@ namespace RectPacking.Models
         }
         public Product(int Width, int Height, bool increaseIdentity = true)
         {
+            this.FreezeTime = new TimeSpan(0, 30, 0);
             //todo: REFACTOR (WITHOUT USING DUBLICATES)
             this.Name = "";
             this.Width = Width;
@@ -80,7 +94,8 @@ namespace RectPacking.Models
                 Area = this.Width * this.Height,
                 Identifier = this.Identifier,
                 IsValid = this.IsValid,
-                Name = this.Name
+                Name = this.Name,
+                FreezeTime = this.FreezeTime
                 
             };
         }

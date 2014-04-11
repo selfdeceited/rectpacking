@@ -49,7 +49,7 @@ namespace RectPacking.Operations
                 best = Place(iteration);
                 if (best != null)
                 {
-                    Placed.Add(best);
+                    Done.Add(best);
                     if (debug) image.UpdateStatus(this, best);
                     this.ProductList = Product.RemoveFromListWithId(best.Product.Identifier, this.ProductList);
                     this.Left.Remove(best);

@@ -32,16 +32,16 @@ namespace RectPacking.Helpers
         {
             if (bestCOA == null)
             {
-                foreach (var coa in process.Placed)
+                foreach (var coa in process.Done)
                 {
-                    TableBitmap = DrawAction(process.VibroTable, TableBitmap, coa.ToRectangle(), RandomColor());
+                    TableBitmap = DrawAction(process.VibroTable, TableBitmap, coa.ToRectangle(), RandomColor(), coa.Product.FreezeTime);
                     //DrawRectangle(TableBitmap, coa.ToRectangle(), RandomColor());
                 }
                 Save(this.FolderTag, "final");
                 return;
             }
-            TableBitmap = DrawAction(process.VibroTable, TableBitmap, bestCOA.ToRectangle(), RandomColor());
-
+            TableBitmap = DrawAction(process.VibroTable, TableBitmap, bestCOA.ToRectangle(), RandomColor(), bestCOA.Product.FreezeTime);
+            TableBitmap = DrawCurrentTime(process.TimeLine.Current, process.VibroTable);
             if (process is PlacementProcess)
             {
                 foreach (var point in (process as PlacementProcess).MainPoints)
@@ -53,11 +53,35 @@ namespace RectPacking.Helpers
             Save(this.FolderTag,(++count).ToString());
         }
 
-        private Bitmap DrawAction(VibroTable vibroTable, Bitmap tableBitmap, Rectangle initialRectangle, Color randomColor)
+        private Bitmap DrawCurrentTime(TimeSpan current, VibroTable table)
+        {
+            var text = current.ToString();
+            Graphics drawing = Graphics.FromImage(TableBitmap);
+            var font = new Font("Arial", 12, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            SizeF textSize = drawing.MeasureString(text, font);
+            drawing.DrawString(text, font, new SolidBrush(Color.MidnightBlue), table.Width - textSize.Width, table.Height - textSize.Height);
+            drawing.Save();
+            return TableBitmap;
+        }
+
+        private Bitmap DrawAction(VibroTable vibroTable, Bitmap tableBitmap, Rectangle initialRectangle, Color randomColor, TimeSpan timeStamp)
         {
             var newRect = new Rectangle(initialRectangle.Left, initialRectangle.Top,
                 initialRectangle.Width, initialRectangle.Height);
-            return DrawRectangle(TableBitmap, newRect, RandomColor());
+            var color = DefineColor(timeStamp);
+            return DrawRectangle(TableBitmap, newRect, color);
+        }
+
+        private Color DefineColor(TimeSpan timeStamp)
+        {
+            var minutes = timeStamp.TotalMinutes;
+            var intMinutes = minutes < 400 ? minutes : 400;
+            var intGreenColor = 255 - (int)Math.Floor(intMinutes * 255 / 400);
+            var intRedColor = 255 - intGreenColor;
+            var intBlueColor = (int)Math.Abs(intRedColor - intGreenColor);
+            var color = Color.FromArgb(intRedColor, intGreenColor, intBlueColor);
+
+            return color;
         }
 
 

@@ -21,18 +21,18 @@ namespace RectPacking.Helpers
             sb.Append("        },");
 
             sb.Append("\"coas\": [");
-            foreach (var coa in placement.Placed)
+            foreach (var coa in placement.Done)
             {
                 sb.Append("    {");
                 sb.Append("    \"type\": \"COA\",");
-                sb.Append("    \"index\": \"" + placement.Placed.IndexOf(coa) + "\",");
+                sb.Append("    \"index\": \"" + placement.Done.IndexOf(coa) + "\",");
                 sb.Append("    \"X\": \"" + coa.Left + "\",");
                 sb.Append("    \"Y\": \"" + coa.Top + "\",");
                 sb.Append("    \"width\": \"" + coa.Width + "\",");
                 sb.Append("    \"height\": \"" + coa.Height + "\"");
                 sb.Append("    }");
 
-                if (placement.Placed.Last() != coa)
+                if (placement.Done.Last() != coa)
                 {
                     sb.Append("    ,");
                 }
@@ -42,7 +42,7 @@ namespace RectPacking.Helpers
 
             sb.Append("\"commonData\":{");
             sb.Append("    \"total area\": \" "+ placement.VibroTable.Area + "\",");
-            var placedArea = CalculateArea(placement.Placed);
+            var placedArea = CalculateArea(placement.Done);
             sb.Append("    \"placed area\": \" " + placedArea + "\",");
             var persentage = placedArea * 100 / placement.VibroTable.Area;
             sb.Append("    \"persentage\": \"" + persentage + "\"");

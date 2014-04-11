@@ -16,6 +16,7 @@ namespace RectPacking.Models
         public int Top { get; set; }
         public double Distance { get; set; }
         public Product Product { get; set; }
+        
         public Rectangle ToRectangle()
         {
             return new Rectangle(Left, Top, Width, Height);
