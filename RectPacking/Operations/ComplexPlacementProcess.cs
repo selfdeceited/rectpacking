@@ -28,7 +28,7 @@ namespace RectPacking.Operations
             for (int index = 1; index < Placements.Count; index++)
             {
                 Placements[index].ProceedFrom(manager,
-                    Placements[index - 1].Placed,
+                    Placements[index - 1].Done,
                     Placements[index - 1].Image,
                     Placements[index - 1].Iteration,
                     debug);

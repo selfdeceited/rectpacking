@@ -99,7 +99,7 @@ namespace RectPacking.Tests
             var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
             placement.Proceed(new EmptyStrategy(), true);
-            Assert.AreEqual(placement.Placed.Count, 2);
+            Assert.AreEqual(placement.OnTable.Count, 2);
             //todo:full placement
 
         }

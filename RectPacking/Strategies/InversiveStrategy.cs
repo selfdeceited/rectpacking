@@ -11,9 +11,9 @@ namespace RectPacking.Strategies
     {
         public void Inverse()
         {
-            var coa = this.IterationStat.Placed.Last();
+            var coa = this.IterationStat.OnTable.Last();
             IterationStat.Left.Add(coa);
-            IterationStat.Placed.Remove(coa);
+            IterationStat.OnTable.Remove(coa);
             //todo: works with local version, not with placementProcess. think about it.
         }
         public void Inverse(int times)

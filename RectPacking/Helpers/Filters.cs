@@ -18,7 +18,7 @@ namespace RectPacking.Helpers
             RemoveInvalidCOAs(ref coaList);//todo: don't like it dublicated
          //   FilterIntersectionWithPlacedCOAs(placement.Placed, ref coaList);
          //   RemoveInvalidCOAs(ref coaList);
-            FilterComplexIntersection(placement.Placed, ref coaList);
+            FilterComplexIntersection(placement.OnTable, ref coaList);
             RemoveInvalidCOAs(ref coaList);
 
             if (placement.VibroTable is Room)

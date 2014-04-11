@@ -64,6 +64,7 @@
     <Compile Include="SampleInitializer.cs" />
     <Compile Include="StrategyTest.cs" />
     <Compile Include="TestLauncher.cs" />
+    <Compile Include="TimeEvaluatingTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

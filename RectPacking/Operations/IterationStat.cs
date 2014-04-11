@@ -11,19 +11,20 @@ namespace RectPacking.Operations
     {
         public int Iteration { get; set; }
         public List<COA> Left { get; set; }
-        public List<COA> Placed { get; set; }
+        public List<COA> OnTable { get; set; }
+        public List<COA> Done { get; set; }
         public long TotalArea { get; set; }
-        public long PlacedArea { get; set; }
+        public long OnTableArea { get; set; }
         public decimal Percentage { get; set; }
 
         public IterationStat(PlacementProcess placement, int Iteration)
         {
             this.Left = placement.Left;
-            this.Placed = placement.Placed;
+            this.OnTable = placement.OnTable;
             this.TotalArea = placement.VibroTable.Area;
-            this.PlacedArea = placement.Placed.Sum(coa => coa.Product.Area);
+            this.OnTableArea = placement.OnTable.Sum(coa => coa.Product.Area);
             this.Iteration = Iteration;
-            this.Percentage = this.PlacedArea/this.TotalArea*100;
+            this.Percentage = this.OnTableArea / this.TotalArea * 100;
         }
 
         public IterationStat()

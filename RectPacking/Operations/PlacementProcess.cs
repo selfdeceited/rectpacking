@@ -17,20 +17,27 @@ namespace RectPacking.Operations
 
         public List<Point> MainPoints { get; set; }
         public new List<COA> Left { get; set; }
-        public new List<COA> Placed { get; set; }
+        public new List<COA> OnTable { get; set; }
+        public new List<COA> Done { get; set; }
 
-        public PlacementProcess(VibroTable vibroTable, List<Product> productList )
+        public PlacementProcess(VibroTable vibroTable, List<Product> productList)
             : base(vibroTable, productList)
         {
             this.MainPoints = new List<Point>();
             this.CreateInitialMainPoints(vibroTable);
             this.Left = ToCOAList(base.Left);
-            this.Placed = ToCOAList(base.Placed);
+            this.Done = ToCOAList(base.Done);
+            this.OnTable = ToCOAList(base.OnTable);
         }
        
         public List<COA> ToCOAList(List<IAction> initial)
         {
             return initial.Cast<COA>().ToList();
+        }
+
+        public void IncreaseSessionTime(COA coa)
+        {
+            this.TimeLine.Current.Add(coa.Product.FreezeTime);
         }
 
         public void CreateInitialMainPoints(VibroTable vibroTable)
@@ -66,12 +73,13 @@ namespace RectPacking.Operations
                 
                 if (best != null)
                 {
-                    Placed.Add(best);
+                    OnTable.Add(best);
                     if (debug) Image.UpdateStatus(this, best);
                     newPoints = ManagePointsFor(best);
                     DeleteCOAsWith(best.Product);
                 }
             }
+
             if (debug) Image.UpdateStatus(this);
             var json = Export.ToJson(this);
             var folder = string.IsNullOrEmpty(folderTag) ? "" :  folderTag + "\\";
@@ -101,19 +109,19 @@ namespace RectPacking.Operations
                     }
 //                    this.MainPoints.AddRange(action.Points);
                 }
-                this.Placed = newPlaced;
+                this.OnTable = newPlaced;
             }
             else//если нет, до делаем их таковыми
             {
-                this.Placed.Clear();
+                this.OnTable.Clear();
 
                 foreach (var action in placed)
                 {
                     var coa = new COA(action.Product, new Point(action.Left, action.Top), COA.CornerType.TopLeft, false, this.VibroTable);
-                    this.Placed.Add(coa);
+                    this.OnTable.Add(coa);
                 }
 
-                foreach (var action in this.Placed)
+                foreach (var action in this.OnTable)
                 {
                     foreach (var point in action.Points)
                     {
@@ -140,7 +148,7 @@ namespace RectPacking.Operations
 
                 if (best != null)
                 {
-                    this.Placed.Add(best);
+                    this.OnTable.Add(best);
                     if (debug) Image.UpdateStatus(this, best);
                     newPoints = ManagePointsFor(best);
                     DeleteCOAsWith(best.Product);
@@ -149,7 +157,7 @@ namespace RectPacking.Operations
             }
 
             if (debug) Image.UpdateStatus(this);
-            base.Placed = this.Placed.Cast<IAction>().ToList();
+            base.OnTable = this.OnTable.Cast<IAction>().ToList();
         }
 
         public bool ResumePlacement(COA best)
