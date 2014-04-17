@@ -119,7 +119,7 @@ namespace RectPacking.Tests
             var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(), products);
             var image = new ImageHelper(placement);
             var toPlace = new COA(products[0], new Point(100, 100, true), COA.CornerType.TopLeft, true);
-            image.UpdateStatus(placement, toPlace);
+            image.UpdateStatus(placement, bestCOA: toPlace);
             Assert.NotNull(image);
         }
     }

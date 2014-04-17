@@ -18,6 +18,7 @@ namespace RectPacking.Models
         public long Area { get; set; }
         public bool IsValid { get; set; }
         public TimeSpan FreezeTime { get; set; }
+        public DateTime PlacedOnTable { get; set; }
 
         public Product(string Name, int Width, int Height, bool increaseIdentity = true)
         {

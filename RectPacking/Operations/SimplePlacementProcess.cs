@@ -50,7 +50,7 @@ namespace RectPacking.Operations
                 if (best != null)
                 {
                     Done.Add(best);
-                    if (debug) image.UpdateStatus(this, best);
+                    if (debug) image.UpdateStatus(this, bestCOA: best);
                     this.ProductList = Product.RemoveFromListWithId(best.Product.Identifier, this.ProductList);
                     this.Left.Remove(best);
                 }

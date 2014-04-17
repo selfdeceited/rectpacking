@@ -30,17 +30,23 @@ namespace RectPacking.Helpers
 
         public void UpdateStatus(AbstractPlacement process, IAction bestCOA = null)
         {
-            if (bestCOA == null)
+           // if (bestCOA == null)
+            //{
+            TableBitmap = DrawRectangle(TableBitmap, new Rectangle(0, 0, TableBitmap.Width, TableBitmap.Height)
+                , Color.FloralWhite);
+            if (process is PlacementProcess)
             {
-                foreach (var coa in process.Done)
+                foreach (var coa in (process as PlacementProcess).OnTable)
                 {
                     TableBitmap = DrawAction(process.VibroTable, TableBitmap, coa.ToRectangle(), RandomColor(), coa.Product.FreezeTime);
                     //DrawRectangle(TableBitmap, coa.ToRectangle(), RandomColor());
                 }
-                Save(this.FolderTag, "final");
-                return;
             }
-            TableBitmap = DrawAction(process.VibroTable, TableBitmap, bestCOA.ToRectangle(), RandomColor(), bestCOA.Product.FreezeTime);
+
+                //Save(this.FolderTag, "final");
+                //return;
+           // }
+            //TableBitmap = DrawAction(process.VibroTable, TableBitmap, bestCOA.ToRectangle(), RandomColor(), bestCOA.Product.FreezeTime);
             TableBitmap = DrawCurrentTime(process.TimeLine.Current, process.VibroTable);
             if (process is PlacementProcess)
             {
@@ -184,6 +190,11 @@ namespace RectPacking.Helpers
         {
             var rect = new Rectangle(vibroTable.Left, vibroTable.Top, vibroTable.Width, vibroTable.Height);
             DrawRectangle(this.TableBitmap, rect, Color.Navy);
+        }
+
+        public void DeleteProducts(PlacementProcess placementProcess, List<COA> deletedProducts)
+        {
+            
         }
     }
 }

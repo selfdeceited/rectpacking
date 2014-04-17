@@ -62,9 +62,57 @@ namespace RectPacking.Operations
 
             Image = new ImageHelper(this, folderTag);
             var newPoints = this.MainPoints;
-            var best = SampleBestCOA();//sample is used to get into the cycle
+            var best = SampleBestCOA(); //sample is used to get into the cycle
 
+            this.TimeLine = new TimeLine(new DateTime(2013, 5, 15));
+            this.TimeLine.AddInitialTimeStamp();
             var iteration = 0;
+            
+            while (PlacementIsOk())
+            {
+                
+                if (TimeLine.NowIsOnTimeStamp())
+                {
+                    var deletedProducts = RemoveProductsFor(TimeLine.StartDate + TimeLine.Current);
+                    if (debug) Image.DeleteProducts(this, deletedProducts);
+                    var startCycle = true;
+                    while (startCycle)
+                    {
+                        iteration++;
+                        CreateCOAsForPoints(newPoints);
+                        best = ChooseBestCOA(manager, iteration);
+                        AdjustTimeStampsState();
+                        if (best != null)
+                        {
+                            best.Product.PlacedOnTable = TimeLine.StartDate + TimeLine.Current;
+                            TimeLine.TimeStamps.Add(new TimeStamp(best.Product));
+
+                            OnTable.Add(best);
+                            if (debug) Image.UpdateStatus(this);
+                            newPoints = ManagePointsFor(best);
+                            DeleteCOAsWith(best.Product);
+                            //if (debug) Image.UpdateStatus(this); 
+                        }
+                        else
+                        {
+                            startCycle = false;
+                            TimeLine.ProlongCurrentToNextTimeStamp();
+                        }
+                    }
+                }
+                else
+                {
+                    TimeLine.ProlongCurrentToNextTimeStamp();
+                }
+            }
+
+            TimeLine.EndTime = TimeLine.StartDate + TimeLine.Current;
+
+
+
+
+
+            /*var iteration = 0;
             while (ResumePlacement(best))
             {
                 iteration++;
@@ -80,7 +128,7 @@ namespace RectPacking.Operations
                 }
             }
 
-            if (debug) Image.UpdateStatus(this);
+            */
             var json = Export.ToJson(this);
             var folder = string.IsNullOrEmpty(folderTag) ? "" :  folderTag + "\\";
             var textFile = new System.IO.StreamWriter("C:\\test\\" + folder + "data.json");
@@ -88,6 +136,40 @@ namespace RectPacking.Operations
             textFile.Write(json);
             textFile.Close();
 
+        }
+
+        private void AdjustTimeStampsState()
+        {
+            foreach (var stamp in this.TimeLine.TimeStamps)
+            {
+                if (stamp.Time <= TimeLine.StartDate + TimeLine.Current)
+                {
+                    stamp.State = TimeStampState.Initialized;
+                }
+            }
+        }
+
+        private List<COA> RemoveProductsFor(DateTime currentTimeStamp)
+        {
+            var list = new List<COA>();
+            for (int i = 0; i < OnTable.Count; i++)
+            {
+                if (OnTable[i].Product.PlacedOnTable + OnTable[i].Product.FreezeTime == currentTimeStamp)
+                {
+                    list.Add(OnTable[i]);
+                    OnTable.RemoveAt(i);
+                }
+            }
+            Done.AddRange(list);
+            return list;
+            //points must be deleted too
+        }
+
+        private bool PlacementIsOk()
+        {
+            return
+                TimeLine.TimeStamps.Any(
+                    ts => ts.State == TimeStampState.IsFurther || ts.State == TimeStampState.InQueue);
         }
 
         public override void ProceedFrom(Strategy manager, List<IAction> placed, ImageHelper image, int iteration, bool debug = false)
@@ -149,7 +231,7 @@ namespace RectPacking.Operations
                 if (best != null)
                 {
                     this.OnTable.Add(best);
-                    if (debug) Image.UpdateStatus(this, best);
+                    if (debug) Image.UpdateStatus(this, bestCOA: best);
                     newPoints = ManagePointsFor(best);
                     DeleteCOAsWith(best.Product);
                 }
