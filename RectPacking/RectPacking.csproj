@@ -57,6 +57,7 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\TimeLine.cs" />
+    <Compile Include="Models\TimeStamp.cs" />
     <Compile Include="Models\VibroTable.cs" />
     <Compile Include="Operations\AbstractPlacement.cs" />
     <Compile Include="Operations\ComplexPlacementProcess.cs" />
