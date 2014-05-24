@@ -7,3 +7,5 @@ packages
 RectPacking.v12.suo
 WebUI/obj/
 WebUI/bin/
+RectPacking/bin/
+RectPacking.Tests/bin

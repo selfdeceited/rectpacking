@@ -3,3 +3,5 @@ C:\VS\RectPacking\RectPacking\bin\Debug\RectPacking.pdb
 C:\VS\RectPacking\RectPacking\obj\Debug\RectPacking.csprojResolveAssemblyReference.cache
 C:\VS\RectPacking\RectPacking\obj\Debug\RectPacking.dll
 C:\VS\RectPacking\RectPacking\obj\Debug\RectPacking.pdb
+C:\VS\RectPacking\RectPacking\bin\Debug\Newtonsoft.Json.dll
+C:\VS\RectPacking\RectPacking\bin\Debug\Newtonsoft.Json.xml

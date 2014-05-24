@@ -1,51 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RectPacking.Helpers;
 using RectPacking.Models;
 using RectPacking.Strategies;
+using Point = RectPacking.Models.Point;
 
 namespace RectPacking.Operations
 {
     public class StaticPlacement : PlacementProcess
     {
+        public List<Frame> FrameList { get; set; }
 
         public StaticPlacement(VibroTable vibroTable, List<Product> productList) : base(vibroTable, productList)
         {
+            FrameList = new List<Frame>();
         }
 
         public override void Proceed(Strategy manager, bool debug = false, string folderTag = null)
         {
-
+            
             Image = new ImageHelper(this, folderTag);
             var newPoints = this.MainPoints;
-            var best = SampleBestCOA();//sample is used to get into the cycle
 
             var iteration = 0;
-            while (ResumePlacement(best))
+            var frameIteration = 0;
+            while (ResumeProcess())
             {
-                iteration++;
-                CreateCOAsForPoints(newPoints);
-                best = ChooseBestCOA(manager, iteration);
+                var best = SampleBestCOA();//sample is used to get into the cycle
+                var currentFrame = new Frame
+                {   
+                    VibroTable = this.VibroTable,
+                    StartDate = TimeLine.StartDate + TimeLine.Current,
+                    Index = frameIteration,
+                    SetList = new List<COA>()
+                };
 
-                if (best != null)
+                while (ResumePlacement(best))
                 {
-                    OnTable.Add(best);
-                    if (debug) Image.UpdateStatus(this, newPoints, best);
-                    newPoints = ManagePointsFor(best);
-                    DeleteCOAsWith(best.Product);
+                    iteration++;
+                    CreateCOAsForPoints(newPoints);
+                    best = ChooseBestCOA(manager, iteration);
+
+                    if (best != null)
+                    {
+                        OnTable.Add(best);
+                        currentFrame.SetList.Add(best);
+                        if (debug) Image.UpdateStatus(this, newPoints, best);
+                        newPoints = ManagePointsFor(best);
+                        DeleteCOAsWith(best.Product);
+                    }
                 }
+                OnTable.RemoveAll(coa => true);
+                currentFrame.GetStats();
+                this.FrameList.Add(currentFrame);
+                frameIteration++;
+                TimeLine.Current.Add(currentFrame.TimeForFrame);
             }
+
             if (debug) Image.UpdateStatus(this);
-            this.JSON = Export.ToJson(this);
+            this.JSON = new StringBuilder(JsonConvert.SerializeObject(this));
             //var folder = string.IsNullOrEmpty(folderTag) ? "" : folderTag + "\\";
             //var textFile = new System.IO.StreamWriter("C:\\test\\" + folder + "data.json");
 
             //textFile.Write(json);
             //textFile.Close();
 
+        }
+
+        private bool ResumeProcess()
+        {
+            return this.ProductList.Any();
         }
 
         public void CreateInitialMainPoints(VibroTable vibroTable)
