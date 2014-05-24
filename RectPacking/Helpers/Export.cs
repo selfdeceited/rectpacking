@@ -10,7 +10,7 @@ namespace RectPacking.Helpers
 {
     public static class Export
     {
-        public static string ToJson(AbstractPlacement placement)
+        public static StringBuilder ToJson(AbstractPlacement placement)
         {
             var sb = new StringBuilder();
             sb.Append("{\"tables\":{");
@@ -21,18 +21,61 @@ namespace RectPacking.Helpers
             sb.Append("        },");
 
             sb.Append("\"coas\": [");
-            foreach (var coa in placement.Done)
+
+            if (placement is PlacementProcess)
+            {
+                foreach (var coa in (placement as PlacementProcess).OnTable)
+                {
+                    sb.Append("    {");
+                    sb.Append("    \"type\": \"COA\",");
+                    sb.Append("    \"index\": \"" + placement.OnTable.IndexOf(coa) + "\",");
+                    sb.Append("    \"X\": \"" + coa.Left + "\",");
+                    sb.Append("    \"Y\": \"" + coa.Top + "\",");
+                    sb.Append("    \"width\": \"" + coa.Width + "\",");
+                    sb.Append("    \"height\": \"" + coa.Height + "\"");
+                    sb.Append("    }");
+
+                    if ((placement as PlacementProcess).OnTable.Last() != coa)
+                    {
+                        sb.Append("    ,");
+                    }
+
+                }
+                sb.Append("],");
+            }
+            else
+            {
+                foreach (var coa in placement.OnTable)
+                {
+                    sb.Append("    {");
+                    sb.Append("    \"type\": \"COA\",");
+                    sb.Append("    \"index\": \"" + placement.OnTable.IndexOf(coa) + "\",");
+                    sb.Append("    \"X\": \"" + coa.Left + "\",");
+                    sb.Append("    \"Y\": \"" + coa.Top + "\",");
+                    sb.Append("    \"width\": \"" + coa.Width + "\",");
+                    sb.Append("    \"height\": \"" + coa.Height + "\"");
+                    sb.Append("    }");
+
+                    if (placement.OnTable.Last() != coa)
+                    {
+                        sb.Append("    ,");
+                    }
+
+                }
+                sb.Append("],");
+            }
+
+
+            sb.Append("\"leftProducts\": [");
+            foreach (var product in placement.ProductList)
             {
                 sb.Append("    {");
-                sb.Append("    \"type\": \"COA\",");
-                sb.Append("    \"index\": \"" + placement.Done.IndexOf(coa) + "\",");
-                sb.Append("    \"X\": \"" + coa.Left + "\",");
-                sb.Append("    \"Y\": \"" + coa.Top + "\",");
-                sb.Append("    \"width\": \"" + coa.Width + "\",");
-                sb.Append("    \"height\": \"" + coa.Height + "\"");
+                sb.Append("    \"index\": \"" + placement.ProductList.IndexOf(product) + "\",");
+                sb.Append("    \"width\": \"" + product.Width + "\",");
+                sb.Append("    \"height\": \"" + product.Height + "\"");
                 sb.Append("    }");
 
-                if (placement.Done.Last() != coa)
+                if (placement.ProductList.Last() != product)
                 {
                     sb.Append("    ,");
                 }
@@ -42,14 +85,14 @@ namespace RectPacking.Helpers
 
             sb.Append("\"commonData\":{");
             sb.Append("    \"total area\": \" "+ placement.VibroTable.Area + "\",");
-            var placedArea = CalculateArea(placement.Done);
+            var placedArea = CalculateArea(placement.OnTable);
             sb.Append("    \"placed area\": \" " + placedArea + "\",");
             var persentage = placedArea * 100 / placement.VibroTable.Area;
             sb.Append("    \"persentage\": \"" + persentage + "\"");
             sb.Append("        }");
 
             sb.Append("}");
-            return sb.ToString();
+            return sb;
         }
 
         public static long CalculateArea(List<IAction> list )

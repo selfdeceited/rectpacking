@@ -1,0 +1,9 @@
+syntax: glob
+*.pdb
+*.dll
+*.cache
+.nuget
+packages
+RectPacking.v12.suo
+WebUI/obj/
+WebUI/bin/

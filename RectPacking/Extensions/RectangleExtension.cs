@@ -25,6 +25,42 @@ namespace RectPacking.Extensions
             return false;
         }
 
+        public static double GetOverlayPercent(COA current, COA opponent)
+        {
+            var thisRect = current.ToRectangle();
+            var opponentRect = opponent.ToRectangle();
+            if (thisRect.Touches(opponentRect))
+            {
+                var hasSameY = thisRect.Bottom == opponentRect.Top || thisRect.Top == opponentRect.Bottom;
+                var hasSameX = thisRect.Left == opponentRect.Right || thisRect.Right == opponentRect.Left;
+
+                var overlayLength = 0;
+                if (hasSameX)
+                {
+                    overlayLength = thisRect.Width - thisRect.Right > opponentRect.Right
+                        ? thisRect.Right - opponentRect.Right
+                        : 0;
+                    overlayLength = overlayLength - thisRect.Left < opponentRect.Left
+                        ? opponentRect.Left - thisRect.Left
+                        : 0;
+                    return overlayLength/thisRect.Width;
+                }
+                if (hasSameY)
+                {
+                    overlayLength = thisRect.Height - thisRect.Bottom > opponentRect.Bottom
+                        ? thisRect.Bottom - opponentRect.Bottom
+                        : 0;
+                    overlayLength = overlayLength - thisRect.Top < opponentRect.Top
+                        ? opponentRect.Top - thisRect.Top
+                        : 0;
+                    return overlayLength / thisRect.Height;
+                }
+            }
+
+            return 0;
+
+        }
+
         public static int Touches(this Rectangle sample, VibroTable table)
         {
             var pretender = new Rectangle(0, 0, table.Width, table.Height);
