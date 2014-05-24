@@ -18,7 +18,7 @@ namespace RectPacking.Helpers
         private Bitmap TableBitmap { get; set; }
         private string FolderTag { get; set; }
 
-        public ImageHelper(AbstractPlacement process, string folderTag = null)
+        public ImageHelper(AbstractPlacement process,  string folderTag = null)
         {
             TableBitmap = new Bitmap(process.VibroTable.Width, process.VibroTable.Height);
 
@@ -28,10 +28,8 @@ namespace RectPacking.Helpers
             Save(folderTag);
         }
 
-        public void UpdateStatus(AbstractPlacement process, IAction bestCOA = null)
+        public void UpdateStatus(AbstractPlacement process, List<Point> newPoints = null, IAction bestCOA = null)
         {
-           // if (bestCOA == null)
-            //{
             TableBitmap = DrawRectangle(TableBitmap, new Rectangle(0, 0, TableBitmap.Width, TableBitmap.Height)
                 , Color.FloralWhite);
             if (process is PlacementProcess)
@@ -39,20 +37,18 @@ namespace RectPacking.Helpers
                 foreach (var coa in (process as PlacementProcess).OnTable)
                 {
                     TableBitmap = DrawAction(process.VibroTable, TableBitmap, coa.ToRectangle(), RandomColor(), coa.Product.FreezeTime);
-                    //DrawRectangle(TableBitmap, coa.ToRectangle(), RandomColor());
                 }
             }
 
-                //Save(this.FolderTag, "final");
-                //return;
-           // }
-            //TableBitmap = DrawAction(process.VibroTable, TableBitmap, bestCOA.ToRectangle(), RandomColor(), bestCOA.Product.FreezeTime);
             TableBitmap = DrawCurrentTime(process.TimeLine.Current, process.VibroTable);
             if (process is PlacementProcess)
             {
-                foreach (var point in (process as PlacementProcess).MainPoints)
+                if (newPoints != null)
                 {
-                    TableBitmap = DrawPoint(TableBitmap, Color.Red, point);
+                    foreach (var point in newPoints)
+                    {
+                        TableBitmap = DrawPoint(TableBitmap, Color.CornflowerBlue, point);
+                    }
                 }
             }
 
@@ -82,7 +78,7 @@ namespace RectPacking.Helpers
         {
             var minutes = timeStamp.TotalMinutes;
             var intMinutes = minutes < 400 ? minutes : 400;
-            var intGreenColor = 255 - (int)Math.Floor(intMinutes * 255 / 400);
+            var intGreenColor = 255 - (int)Math.Round(intMinutes * 255 / 400);
             var intRedColor = 255 - intGreenColor;
             var intBlueColor = (int)Math.Abs(intRedColor - intGreenColor);
             var color = Color.FromArgb(intRedColor, intGreenColor, intBlueColor);

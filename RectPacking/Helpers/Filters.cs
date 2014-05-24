@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RectPacking.Models;
 using RectPacking.Operations;
+using Point = RectPacking.Models.Point;
 
 namespace RectPacking.Helpers
 {
@@ -87,6 +88,21 @@ namespace RectPacking.Helpers
                 coaList = coaList.Where(coa => coa.IsValid);
             }
         }
+
+        public static void RemovePointAtLocation(this List<Point> list, int x, int y)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].X == x && list[i].Y == y)
+                {
+                    list.RemoveAt(i);
+                    i--;
+                }
+                
+            }
+        }
+
+
     }
 }
 

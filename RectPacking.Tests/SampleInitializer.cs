@@ -36,18 +36,35 @@ namespace RectPacking.Tests
             return new VibroTable(400, 300);
         }
 
-        public static List<Product> CreateRandomProdicts(int count)
+        public static List<Product> CreateRandomProdicts(int count, bool withTime = false)
         {
             var products = new List<Product>();
             for (int i = 0; i < count; i++)
             {
                 var randX = new Random((int)(DateTime.Now.ToBinary() / 215 - i));
                 var randY = new Random((int)(1234 + DateTime.Now.Millisecond + 3 * i));
+                var randTime = new Random((int)(i*DateTime.Now.Ticks) + i.ToString().GetHashCode());
+
                 var randomX = randX.Next(20, 90);
                 var randomY = randY.Next(10, 70);
-                products.Add(new Product("product" + i, randomX, randomY));
+                var randomTime = randTime.Next(40, 400);
+                randomTime = CeilingByDegree(randomTime, 5);
+                products.Add(withTime
+                    ? new Product(randomTime, "product" + i, randomX, randomY)
+                    : new Product("product" + i, randomX, randomY));
             }
             return products;
+        }
+
+        public static List<Product> CreateProductsWithTime(int count)
+        {
+            return CreateRandomProdicts(count, true);
+        }
+
+        public static int CeilingByDegree(int random, int degree)
+        {
+            random = random % degree == 0 ? random : random + (degree - random % degree);
+            return random;
         }
     }
 }

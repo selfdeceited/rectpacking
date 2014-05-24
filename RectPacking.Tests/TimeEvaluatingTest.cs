@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using RectPacking.Models;
 using RectPacking.Operations;
+using RectPacking.Strategies;
 using RectPacking.Strategies.Heuristic;
+using RectPacking.Strategies.TimeEvaluating;
 
 namespace RectPacking.Tests
 {
@@ -35,9 +37,33 @@ namespace RectPacking.Tests
                 new Product(120, "120min", 70, 30),
 
             };
-            var process = new PlacementProcess(new VibroTable(150, 150), productList);
+            var process = new DynamicPlacement(new VibroTable(150, 150), productList);
             process.Proceed(new SimpleHeuristicStrategy(), true);
 
         }
+
+        [Test]
+        public void ComplexTimeTest()
+        {
+            var products = SampleInitializer.CreateProductsWithTime(300);
+            var process = new PlacementProcess(new VibroTable(500, 500), products);
+            process.Proceed(new QuasiHumanHeuristicStrategy(), true);
+        }
+        [Test]
+        public void SlowFirstTimeTest()
+        {
+            var products = SampleInitializer.CreateProductsWithTime(300);
+            var process = new PlacementProcess(new VibroTable(500, 500), products);
+            process.Proceed(new SlowFirstHeuristicStrategy(), true);
+        }
+        [Test]
+        public void CloseCommonFreezeTimeTest()
+        {
+            var products = SampleInitializer.CreateProductsWithTime(300);
+            var process = new PlacementProcess(new VibroTable(500, 500), products);
+            process.Proceed(new CloseCommonFreezeTimeStrategy(), true, "closeCommon");
+        }
     }
+
+
 }

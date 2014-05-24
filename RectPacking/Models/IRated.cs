@@ -8,6 +8,6 @@ namespace RectPacking.Models
 {
     public interface IRated
     {
-        int Rating { get; set; }
+        double Rating { get; set; }
     }
 }

@@ -57,5 +57,16 @@ namespace RectPacking.Models
                 .Where(point => this != point).
                 Aggregate(false, (current, point) => current || point.X == this.X && point.Y == this.Y);
         }
+
+
+        public bool ContainsInCOAsFrom(List<COA> list)
+        {
+            return list.Any(l => l.Points.Any(p => p.X == this.X && p.Y == this.Y));
+        }
+
+        public bool IsLike(Point pretender)
+        {
+            return this.X == pretender.X && this.Y == pretender.Y;
+        }
     }
 }

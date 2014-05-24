@@ -30,34 +30,28 @@ namespace RectPacking.Tests
 
             //5,50 10,45 15,40 20,35 25,30 30,25 35,20 40,15 45,10 50,5
 
-            var massPlacement = new PlacementProcess(new VibroTable(200, 200), products);
+            var massPlacement = new DynamicPlacement(new VibroTable(200, 200), products);
             massPlacement.Proceed(new FakeStrategyManager(fake1, fake2), true);
-            //todo: write down all coas as must be
-            Assert.True(massPlacement.OnTable.Any());
 
-            //top right, area > 400, area < 700; 10*45 15*40 40*15 45*10 first is 10*45
-            Assert.AreEqual(massPlacement.OnTable[0].ToString(), "10*45 cTopRight on p200,0");
-            Assert.True(massPlacement.OnTable[0].Product.Area > 400);
-            Assert.True(massPlacement.OnTable[0].Product.Area < 700);
-            Assert.True(massPlacement.OnTable[1].ToString().Contains("cTopRight"));
-            Assert.True(massPlacement.OnTable[1].Product.Area > 400);
-            Assert.True(massPlacement.OnTable[1].Product.Area < 700);
+            Assert.False(massPlacement.Left.Any());
+            Assert.AreEqual(massPlacement.Done.Count, 10);
 
+            Assert.AreEqual(massPlacement.Done[0].Product.Name, "product1");//because FreezeTime is minimal 5*50
         }
         [Test]
         public void MassPlacement()
         {
             var products = SampleInitializer.CreateProductsForMassPlacement();
-            var massPlacement = new PlacementProcess(SampleInitializer.CreateVibroTable(), products);
+            var massPlacement = new StaticPlacement(SampleInitializer.CreateVibroTable(), products);
             massPlacement.Proceed(new EmptyStrategy(), true);
             //must be taken 6 first : 100-200, 300-100, 200-300  50-50, 50-50, 100-50
-            Assert.AreEqual(massPlacement.OnTable.Count, 6);
+
 
             var newProducts = SampleInitializer.CreateProductsForMassPlacement();
-            var massPlacementWithSimpleHeuristics = new PlacementProcess(SampleInitializer.CreateVibroTable(), newProducts);
+            var massPlacementWithSimpleHeuristics = new StaticPlacement(SampleInitializer.CreateVibroTable(), newProducts);
             massPlacementWithSimpleHeuristics.Proceed(new SimpleHeuristicStrategy(), true);
             //must be taken 4 : 100-200, 300-100, 200-300  100-50
-            Assert.AreEqual(massPlacementWithSimpleHeuristics.OnTable.Count, 4);
+
             //todo: write down all coas as must be
         }
 
@@ -65,7 +59,7 @@ namespace RectPacking.Tests
         public void CavingHeuristicsTest()
         {
             var newProducts = SampleInitializer.CreateProductsForMassPlacement();
-            var massPlacementWithCavingHeuristics = new PlacementProcess(SampleInitializer.CreateVibroTable(), newProducts);
+            var massPlacementWithCavingHeuristics = new StaticPlacement(SampleInitializer.CreateVibroTable(), newProducts);
             massPlacementWithCavingHeuristics.Proceed(new QuasiHumanHeuristicStrategy(), true);
 
             foreach (var sample in massPlacementWithCavingHeuristics.OnTable)
@@ -83,7 +77,7 @@ namespace RectPacking.Tests
             var table = new VibroTable(400, 300);
             var products = SampleInitializer.CreateRandomProdicts(50);
             var simple = new SimplePlacementProcess(table, products);
-            var coaPlacement = new PlacementProcess(table, products);
+            var coaPlacement = new StaticPlacement(table, products);
             var complexPlacement = new ComplexPlacementProcess(table, products, simple, coaPlacement);
             complexPlacement.Proceed(new EmptyStrategy(), true);
 
@@ -96,7 +90,7 @@ namespace RectPacking.Tests
             room.PlaceTable(new VibroTable(100,200), 0, 0);
             room.PlaceTable(new VibroTable(200, 200), 300, 300);
             var products = SampleInitializer.CreateRandomProdicts(180);
-            var placement = new PlacementProcess(room, products);
+            var placement = new StaticPlacement(room, products);
             placement.ProceedRoom(new EmptyStrategy(), true);
         }
     }

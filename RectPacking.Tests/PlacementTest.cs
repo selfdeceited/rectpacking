@@ -16,7 +16,7 @@ namespace RectPacking.Tests
         [Test]
         public void CreatePlacement()
         {
-            var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
+            var placement = new StaticPlacement(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
             Assert.AreEqual(placement.MainPoints.Count, 4);
             //points must be:             0,0        400,0        0,300        400,300 
@@ -36,7 +36,7 @@ namespace RectPacking.Tests
         [Test]
         public void CorrectCreateCOAs()
         {
-            var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
+            var placement = new StaticPlacement(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
             var points = new List<Point> {new Point(50, 50, true)};
             placement.CreateCOAsForPoints(points, false);
@@ -64,23 +64,23 @@ namespace RectPacking.Tests
         {
             var table = SampleInitializer.CreateVibroTable();
 
-            var usualPlacement = new PlacementProcess(table, 
+            var usualPlacement = new StaticPlacement(table, 
                 new List<Product>{new Product(300, 350)});
             usualPlacement.CreateCOAsForPoints();
             Assert.AreEqual(usualPlacement.Left.Count, 4);
 
-            var impossibleplacement = new PlacementProcess(table, 
+            var impossibleplacement = new StaticPlacement(table, 
                 new List<Product> { new Product(500, 10) });
             impossibleplacement.CreateCOAsForPoints();
             Assert.AreEqual(impossibleplacement.Left.Count, 0);
 
-            var goodPlacement = new PlacementProcess(table,
+            var goodPlacement = new StaticPlacement(table,
                 new List<Product> { new Product(20, 200) });
             goodPlacement.CreateCOAsForPoints();
             Assert.AreEqual(goodPlacement.Left.Count, 8);
 
             //mass stuff
-            var massPlacement = new PlacementProcess(table, new List<Product>
+            var massPlacement = new StaticPlacement(table, new List<Product>
             {
                 new Product(20, 200), //8
                 new Product(30, 50),  //8
@@ -96,7 +96,7 @@ namespace RectPacking.Tests
         [Test]
         public void ProceedPlacement()
         {
-            var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
+            var placement = new StaticPlacement(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
             placement.Proceed(new EmptyStrategy(), true);
             Assert.AreEqual(placement.OnTable.Count, 2);
@@ -107,7 +107,7 @@ namespace RectPacking.Tests
         [Test]
         public void ImageCreate()
         {
-            var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(),
+            var placement = new StaticPlacement(SampleInitializer.CreateVibroTable(),
                 SampleInitializer.CreateProducts());
             var image = new ImageHelper(placement);
             Assert.NotNull(image);
@@ -116,7 +116,7 @@ namespace RectPacking.Tests
         public void AddCOAToImage()
         {
             var products = SampleInitializer.CreateProducts();
-            var placement = new PlacementProcess(SampleInitializer.CreateVibroTable(), products);
+            var placement = new StaticPlacement(SampleInitializer.CreateVibroTable(), products);
             var image = new ImageHelper(placement);
             var toPlace = new COA(products[0], new Point(100, 100, true), COA.CornerType.TopLeft, true);
             image.UpdateStatus(placement, bestCOA: toPlace);

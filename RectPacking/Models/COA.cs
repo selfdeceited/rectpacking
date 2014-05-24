@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using RectPacking.Extensions;
+using RectPacking.Helpers;
 using RectPacking.Models;
 
 namespace RectPacking.Models
@@ -160,5 +161,7 @@ namespace RectPacking.Models
             if (sample.IntersectsWith(pretender)) return true;
             return false;
         }
+
+
     }
 }
