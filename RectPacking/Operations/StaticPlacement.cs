@@ -21,16 +21,19 @@ namespace RectPacking.Operations
             FrameList = new List<Frame>();
         }
 
+
         public override void Proceed(Strategy manager, bool debug = false, string folderTag = null)
         {
             
             Image = new ImageHelper(this, folderTag);
-            var newPoints = this.MainPoints;
+            
 
             var iteration = 0;
             var frameIteration = 0;
             while (ResumeProcess())
             {
+                MainPoints = CreateInitialMainPoints().ToList();
+                var newPoints = CreateInitialMainPoints().ToList();
                 var best = SampleBestCOA();//sample is used to get into the cycle
                 var currentFrame = new Frame
                 {   
@@ -63,7 +66,7 @@ namespace RectPacking.Operations
             }
 
             if (debug) Image.UpdateStatus(this);
-            this.JSON = new StringBuilder(JsonConvert.SerializeObject(this));
+            this.JSON = new StringBuilder(JsonConvert.SerializeObject(this.FrameList));
             //var folder = string.IsNullOrEmpty(folderTag) ? "" : folderTag + "\\";
             //var textFile = new System.IO.StreamWriter("C:\\test\\" + folder + "data.json");
 

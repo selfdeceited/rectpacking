@@ -54,5 +54,13 @@ namespace RectPacking.Operations
             this.MainPoints.Add(new Point(vibroTable.Left, vibroTable.Top + vibroTable.Height, true));
             this.MainPoints.Add(new Point(vibroTable.Left + vibroTable.Width, vibroTable.Top + vibroTable.Height, true));
         }
+        public IEnumerable<Point> CreateInitialMainPoints()
+        {
+            var vibroTable = this.VibroTable;
+            yield return (new Point(vibroTable.Left, vibroTable.Top, true));
+            yield return (new Point(vibroTable.Left + vibroTable.Width, vibroTable.Top, true));
+            yield return (new Point(vibroTable.Left, vibroTable.Top + vibroTable.Height, true));
+            yield return (new Point(vibroTable.Left + vibroTable.Width, vibroTable.Top + vibroTable.Height, true));
+        }
     }
 }

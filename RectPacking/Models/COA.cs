@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 using RectPacking.Extensions;
 using RectPacking.Helpers;
 using RectPacking.Models;
@@ -14,17 +15,24 @@ namespace RectPacking.Models
     public class COA: IAction
         //COA means Common Orderable Action
     {
+
         public enum CornerType
         {
             TopRight, TopLeft, DownRight, DownLeft
         }
-
+                [JsonIgnore]
         public Product Product { get; set; }
+                [JsonIgnore]
         public Point MainPoint { get; set; }
+                [JsonIgnore]
         public List<Point> Points { get; set; }
+                [JsonIgnore]
         public CornerType Corner { get; set; }
+                [JsonIgnore]
         public bool Rotated { get; set; }
+                [JsonIgnore]
         public bool IsValid { get; set; }
+                [JsonIgnore]
         public VibroTable VibroTable { get; set; }
 
 
@@ -33,6 +41,7 @@ namespace RectPacking.Models
         public int Height { get; set; }
         public int Left { get; set; }
         public int Top { get; set; }
+                [JsonIgnore]
         public double Distance { get; set; }
 
 

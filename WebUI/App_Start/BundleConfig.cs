@@ -32,7 +32,8 @@ namespace WebUI
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                 "~/Scripts/modernizr-*"));
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                "~/Scripts/jquery-*"));
+                "~/Scripts/jquery-*",
+                "~/Scripts/bootstrap*"));
         }
     }
 }
