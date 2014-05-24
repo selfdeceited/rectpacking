@@ -99,5 +99,10 @@ namespace RectPacking.Helpers
         {
             return list.Sum(coa => coa.Product.Area);
         }
+
+        public static StringBuilder ToJson(List<Frame> frameList)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

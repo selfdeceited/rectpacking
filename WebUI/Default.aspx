@@ -32,13 +32,14 @@
                 success: function (data) {
                     parsedData = $.parseJSON(data);
                     parsedData = $.parseJSON(parsedData.d);
-                    $("#myCanvas").attr("width", parsedData.tables.width)
+                    /*$("#myCanvas").attr("width", parsedData.tables.width)
 			      				 .attr("height", parsedData.tables.height);
                     draw(0, 0, parsedData.tables.width, parsedData.tables.height, "white");
                     for (var i = 0; i < parsedData.coas.length; i++) {
                         var coa = parsedData.coas[i];
                         draw(coa.X, coa.Y, coa.width, coa.height, getRandomColor());
-                    }
+                    }*/
+                    $("#wrapper").text(parsedData.toString());
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert(textStatus + ": " + errorThrown);

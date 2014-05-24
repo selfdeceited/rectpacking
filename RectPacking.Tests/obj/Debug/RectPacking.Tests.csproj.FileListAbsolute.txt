@@ -7,3 +7,5 @@ C:\VS\RectPacking\RectPacking.Tests\bin\Debug\nunit.framework.xml
 C:\VS\RectPacking\RectPacking.Tests\obj\Debug\RectPacking.Tests.csprojResolveAssemblyReference.cache
 C:\VS\RectPacking\RectPacking.Tests\obj\Debug\RectPacking.Tests.dll
 C:\VS\RectPacking\RectPacking.Tests\obj\Debug\RectPacking.Tests.pdb
+C:\VS\RectPacking\RectPacking.Tests\bin\Debug\Newtonsoft.Json.dll
+C:\VS\RectPacking\RectPacking.Tests\bin\Debug\Newtonsoft.Json.xml
