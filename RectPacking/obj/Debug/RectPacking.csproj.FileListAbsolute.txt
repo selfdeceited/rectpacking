@@ -5,3 +5,10 @@ C:\VS\RectPacking\RectPacking\obj\Debug\RectPacking.dll
 C:\VS\RectPacking\RectPacking\obj\Debug\RectPacking.pdb
 C:\VS\RectPacking\RectPacking\bin\Debug\Newtonsoft.Json.dll
 C:\VS\RectPacking\RectPacking\bin\Debug\Newtonsoft.Json.xml
+D:\vs\RP\RectPacking\bin\Debug\RectPacking.dll
+D:\vs\RP\RectPacking\bin\Debug\RectPacking.pdb
+D:\vs\RP\RectPacking\bin\Debug\Newtonsoft.Json.dll
+D:\vs\RP\RectPacking\bin\Debug\Newtonsoft.Json.xml
+D:\vs\RP\RectPacking\obj\Debug\RectPacking.csprojResolveAssemblyReference.cache
+D:\vs\RP\RectPacking\obj\Debug\RectPacking.dll
+D:\vs\RP\RectPacking\obj\Debug\RectPacking.pdb
