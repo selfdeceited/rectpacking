@@ -95,12 +95,7 @@ namespace RectPacking.Operations
 
             TimeLine.EndTime = TimeLine.StartDate + TimeLine.Current;
 
-            var json = Export.ToJson(this);
-            var folder = string.IsNullOrEmpty(folderTag) ? "" :  folderTag + "\\";
-            var textFile = new System.IO.StreamWriter("C:\\test\\" + folder + "data.json");
-            
-            textFile.Write(json);
-            textFile.Close();
+            this.JSON = Export.ToJson(this);
 
         }
 

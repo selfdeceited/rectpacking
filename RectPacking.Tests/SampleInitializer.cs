@@ -48,7 +48,7 @@ namespace RectPacking.Tests
                 var randomX = randX.Next(20, 90);
                 var randomY = randY.Next(10, 70);
                 var randomTime = randTime.Next(40, 400);
-                randomTime = CeilingByDegree(randomTime, 5);
+                randomTime = CeilingByDegree(randomTime, 30);
                 products.Add(withTime
                     ? new Product(randomTime, "product" + i, randomX, randomY)
                     : new Product("product" + i, randomX, randomY));

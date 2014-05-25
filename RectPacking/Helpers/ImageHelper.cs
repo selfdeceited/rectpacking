@@ -161,7 +161,7 @@ namespace RectPacking.Helpers
                 var pathTag = string.IsNullOrEmpty(tag) ? "00.jpg" : "0" + tag + ".jpg";
                 folderTag = string.IsNullOrEmpty(folderTag) ? "" :  folderTag + "\\";
                 var destination = "C:\\test\\" + folderTag + pathTag;
-                img.Save(destination, ImageFormat.Jpeg);
+                //img.Save(destination, ImageFormat.Jpeg);
             }
         }
 

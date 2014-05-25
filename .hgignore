@@ -9,3 +9,4 @@ WebUI/obj/
 WebUI/bin/
 RectPacking/bin/
 RectPacking.Tests/bin
+WebUI/Content/bootstrap*
