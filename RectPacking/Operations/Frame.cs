@@ -13,7 +13,7 @@ namespace RectPacking.Operations
         
         public VibroTable VibroTable { get; set; }
 
-        [JsonIgnore]
+       // [JsonIgnore]
         public int Index { get; set; }
 
         public List<COA> SetList { get; set; }
@@ -21,7 +21,7 @@ namespace RectPacking.Operations
         [JsonIgnore]
         public DateTime StartDate { get; set; }
 
-        [JsonIgnore]
+        
         public DateTime EndDate { get; set; }
 
         [JsonIgnore]

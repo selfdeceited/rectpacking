@@ -39,7 +39,7 @@ namespace RectPacking.Operations
             var newPoints = this.MainPoints;
             var best = SampleBestCOA(); //sample is used to get into the cycle
 
-            this.TimeLine = new TimeLine(new DateTime(2013, 5, 15));
+            this.TimeLine = new TimeLine(DateTime.Now);
             this.TimeLine.AddInitialTimeStamp();
             var iteration = 0;
             
