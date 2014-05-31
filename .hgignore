@@ -10,3 +10,7 @@ WebUI/bin/
 RectPacking/bin/
 RectPacking.Tests/bin
 WebUI/Content/bootstrap*
+RectPacking.Tests/obj/
+RectPacking.Model/
+RectPacking.UI/bin/
+WebUI

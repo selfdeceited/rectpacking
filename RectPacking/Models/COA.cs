@@ -20,7 +20,7 @@ namespace RectPacking.Models
         {
             TopRight, TopLeft, DownRight, DownLeft
         }
-                [JsonIgnore]
+               
         public Product Product { get; set; }
                 [JsonIgnore]
         public Point MainPoint { get; set; }

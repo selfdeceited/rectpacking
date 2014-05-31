@@ -21,6 +21,12 @@ namespace RectPacking.Operations
             FrameList = new List<Frame>();
         }
 
+        public StaticPlacement(List<Frame> frameList) : base(frameList.First().VibroTable, new List<Product>())
+        {
+            this.FrameList = frameList;
+            this.VibroTable = frameList.First().VibroTable;
+        }
+
 
         public override void Proceed(Strategy manager, bool debug = false, string folderTag = null)
         {
@@ -62,7 +68,8 @@ namespace RectPacking.Operations
                 currentFrame.GetStats();
                 this.FrameList.Add(currentFrame);
                 frameIteration++;
-                TimeLine.Current.Add(currentFrame.TimeForFrame);
+                TimeLine.Current += currentFrame.TimeForFrame;
+                TimeLine.EndTime = TimeLine.StartDate + TimeLine.Current;
             }
 
             if (debug) Image.UpdateStatus(this);
@@ -240,6 +247,64 @@ namespace RectPacking.Operations
             const int greatNumber = 1000000;
             return new COA(new Product(greatNumber, greatNumber, false),
                 new Point(), COA.CornerType.TopLeft, false);
+        }
+
+        public void ProceedFromFrame(int frameRealId, Strategy manager)
+        {
+            var framesToProducts = FrameList.Where(fl => fl.Index >= frameRealId);
+
+            foreach (var frame in framesToProducts)
+            {
+                var products = frame.SetList.Select(c => c.Product);
+                foreach (var p in products)
+                {
+                    ProductList.Add(new Product((int)p.FreezeTime.TotalMinutes, p.Name, p.Width, p.Height));
+                }
+
+            }
+
+            FrameList = FrameList.Where(fl => fl.Index < frameRealId).ToList();
+            var frameIteration = frameRealId;
+            var iteration = FrameList.Sum(frame => frame.SetList.Count);
+
+            while (ResumeProcess())
+            {
+                MainPoints = CreateInitialMainPoints().ToList();
+                var newPoints = CreateInitialMainPoints().ToList();
+                var best = SampleBestCOA();//sample is used to get into the cycle
+                var currentFrame = new Frame
+                {   
+                    VibroTable = this.VibroTable,
+                    StartDate = TimeLine.StartDate + TimeLine.Current,
+                    Index = frameIteration,
+                    SetList = new List<COA>()
+                };
+
+                while (ResumePlacement(best))
+                {
+                    iteration++;
+                    CreateCOAsForPoints(newPoints);
+                    best = ChooseBestCOA(manager, iteration);
+
+                    if (best != null)
+                    {
+                        OnTable.Add(best);
+                        currentFrame.SetList.Add(best);
+                        newPoints = ManagePointsFor(best);
+                        DeleteCOAsWith(best.Product);
+                    }
+                }
+                OnTable.RemoveAll(coa => true);
+                currentFrame.GetStats();
+                this.FrameList.Add(currentFrame);
+                frameIteration++;
+                TimeLine.Current += currentFrame.TimeForFrame;
+                TimeLine.EndTime = TimeLine.StartDate + TimeLine.Current;
+            }
+
+            this.JSON = new StringBuilder(JsonConvert.SerializeObject(this.FrameList));
+
+
         }
     }
 }

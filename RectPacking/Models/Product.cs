@@ -4,20 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
+using Newtonsoft.Json;
 
 namespace RectPacking.Models
 {
     public class Product
     {
+        [JsonIgnore]
         public int Identifier { get; set; }
+         [JsonIgnore]
         private static int identityCount;
 
         public int Width { get; set; }
         public int Height { get; set; }
         public string Name { get; set; }
+         [JsonIgnore]
         public long Area { get; set; }
+         [JsonIgnore]
         public bool IsValid { get; set; }
+
         public TimeSpan FreezeTime { get; set; }
+         [JsonIgnore]
         public DateTime PlacedOnTable { get; set; }
 
         public Product(string Name, int Width, int Height, bool increaseIdentity = true)
