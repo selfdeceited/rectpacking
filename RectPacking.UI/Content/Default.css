@@ -186,7 +186,7 @@ html, body {
 }
 
 body {
-  background: linear-gradient(#3D3D3E, #2A2A2A);
+  /*background: linear-gradient(#3D3D3E, #2A2A2A);*/
   background-attachment: fixed;
   font-family: Helvetica;
 }

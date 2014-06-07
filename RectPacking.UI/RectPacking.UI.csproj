@@ -119,11 +119,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.OAuth.2.0.30506.0\lib\net40\Microsoft.Web.WebPages.OAuth.dll</HintPath>
     </Reference>
-    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.2.0.30506.0\lib\net40\WebMatrix.WebData.dll</HintPath>
-    </Reference>
     <Reference Include="DotNetOpenAuth.AspNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\DotNetOpenAuth.AspNet.4.1.4.12333\lib\net45-full\DotNetOpenAuth.AspNet.dll</HintPath>
@@ -179,13 +174,47 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Migrations\201406071038576_initial.cs" />
+    <Compile Include="Migrations\201406071038576_initial.Designer.cs">
+      <DependentUpon>201406071038576_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201406071106518_pausedComplexContainers.cs" />
+    <Compile Include="Migrations\201406071106518_pausedComplexContainers.Designer.cs">
+      <DependentUpon>201406071106518_pausedComplexContainers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201406071117268_addedIsReadyToProduct.cs" />
+    <Compile Include="Migrations\201406071117268_addedIsReadyToProduct.Designer.cs">
+      <DependentUpon>201406071117268_addedIsReadyToProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201406071144598_changedOrderDatesToDateTime.cs" />
+    <Compile Include="Migrations\201406071144598_changedOrderDatesToDateTime.Designer.cs">
+      <DependentUpon>201406071144598_changedOrderDatesToDateTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201406071247082_addNameToContainer.cs" />
+    <Compile Include="Migrations\201406071247082_addNameToContainer.Designer.cs">
+      <DependentUpon>201406071247082_addNameToContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\COA.cs" />
+    <Compile Include="Models\ConcreteType.cs" />
+    <Compile Include="Models\Container.cs" />
+    <Compile Include="Models\Frame.cs" />
+    <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\PackingContext.cs" />
+    <Compile Include="Models\Placement.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductSet.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -274,7 +303,9 @@
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -313,11 +344,31 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Home\Primitive.cshtml" />
-    <Content Include="Views\Home\Shop.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Order\Details.cshtml" />
+    <Content Include="Views\Order\Create.cshtml" />
+    <Content Include="Views\Order\Edit.cshtml" />
+    <Content Include="Views\Order\Delete.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\Client\Index.cshtml" />
+    <Content Include="Views\Client\Details.cshtml" />
+    <Content Include="Views\Client\Create.cshtml" />
+    <Content Include="Views\Client\Edit.cshtml" />
+    <Content Include="Views\Client\Delete.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\Details.cshtml" />
+    <Content Include="Views\Product\Create.cshtml" />
+    <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Product\Delete.cshtml" />
+    <Content Include="Views\Home\FromDb.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -331,6 +382,26 @@
       <Project>{0ef94878-e7b1-4699-8c52-2c0ce6defeaf}</Project>
       <Name>RectPacking</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201406071038576_initial.resx">
+      <DependentUpon>201406071038576_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406071106518_pausedComplexContainers.resx">
+      <DependentUpon>201406071106518_pausedComplexContainers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406071117268_addedIsReadyToProduct.resx">
+      <DependentUpon>201406071117268_addedIsReadyToProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406071144598_changedOrderDatesToDateTime.resx">
+      <DependentUpon>201406071144598_changedOrderDatesToDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406071247082_addNameToContainer.resx">
+      <DependentUpon>201406071247082_addNameToContainer.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

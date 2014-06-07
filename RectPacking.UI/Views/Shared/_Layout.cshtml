@@ -15,14 +15,16 @@
                     <p class="site-title">@Html.ActionLink("Построение расписания", "Index", "Home")</p>
                 </div>
                 <div class="float-right">
-                    <section id="login">
+                    @*<section id="login">
                         @Html.Partial("_LoginPartial")
-                    </section>
+                    </section>*@
                     <nav>
                         <ul id="menu">
-                            <li>@Html.ActionLink("Главная", "Index", "Home")</li>
-                            @*<li>@Html.ActionLink("Площадь цеха", "Shop", "Home")</li>*@
-                           @* <li>@Html.ActionLink("С примитивными алгоритмами", "Primitive", "Home")</li>*@
+                            <li>@Html.ActionLink("Размещение", "FromDb", "Home")</li>
+                            <li>@Html.ActionLink("Заказы", "Index", "Order")</li>
+                            <li>@Html.ActionLink("Пользователи", "Index", "User")</li>
+                            <li>@Html.ActionLink("Клиенты", "Index", "Client")</li>
+                            <li>@Html.ActionLink("Изделия", "Index", "Product")</li>
                         </ul>
                     </nav>
                 </div>
