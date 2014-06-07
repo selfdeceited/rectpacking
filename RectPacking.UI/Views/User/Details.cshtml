@@ -1,0 +1,57 @@
+﻿@model RectPacking.UI.Models.User
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>User</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsManager)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsManager)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsAdmin)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsAdmin)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.UserName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UserName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SaltedPassword)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SaltedPassword)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CreatedAt)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreatedAt)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Enabled)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Enabled)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

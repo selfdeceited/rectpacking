@@ -1,0 +1,6 @@
+D:\vs\RP\RectPacking\bin\Release\RectPacking.dll
+D:\vs\RP\RectPacking\bin\Release\RectPacking.pdb
+D:\vs\RP\RectPacking\bin\Release\Newtonsoft.Json.dll
+D:\vs\RP\RectPacking\bin\Release\Newtonsoft.Json.xml
+D:\vs\RP\RectPacking\obj\Release\RectPacking.dll
+D:\vs\RP\RectPacking\obj\Release\RectPacking.pdb
