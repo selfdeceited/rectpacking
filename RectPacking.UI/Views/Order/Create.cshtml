@@ -1,0 +1,124 @@
+﻿@model RectPacking.UI.Models.Order
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Order</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UserId, "User")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("UserId", String.Empty)
+            @Html.ValidationMessageFor(model => model.UserId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StartDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.StartDate)
+            @Html.ValidationMessageFor(model => model.StartDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EndDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EndDate)
+            @Html.ValidationMessageFor(model => model.EndDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ClientId, "Client")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ClientId", String.Empty)
+            @Html.ValidationMessageFor(model => model.ClientId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Rating)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Rating)
+            @Html.ValidationMessageFor(model => model.Rating)
+        </div>
+
+        <div class="editor-label">
+            Изделия
+        </div>
+        <b>Добавить связь</b><a class="addpicture">Add</a>
+        <table id="selectorTable"></table> 
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+        function removing() {
+            $(".deletepicture").click(function () {
+                var id = $(this).attr("data-val");
+                $("#row_" + id).detach();
+            });
+        }
+        $(".addpicture").click(function () {
+            //цикл only
+            var lastElementIndex = 0;
+            $(".ddl").each(function () {
+                if (lastElementIndex <= $(this).attr("data-val")) {
+                    lastElementIndex = $(this).attr("data-val");
+                }
+            });
+            lastElementIndex++;
+            var options = '';
+            $.ajax({
+                url: "GetProduct",
+                data: "",
+                dataType: "json",
+                type: "POST",
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                dataFilter: function (data) { return data; },
+                success: function (data) {
+                    for (var i in data) {
+                        options += '<option value=' + data[i].Id + '>' + data[i].Name + ' - габариты ' + data[i].Width + '*' + data[i].Height + '</option>';
+                    }
+                    $("#selectorTable").append('<tr id=row_' + lastElementIndex + '>');
+                    $('#row_' + lastElementIndex).append('<td><select size="1" class="ddl" id="ddl_' + lastElementIndex + '"name="ff ' +
+                    lastElementIndex + '" data-val="' + lastElementIndex + '">' + options + '</select></td>');
+
+                    $('#row_' + lastElementIndex).append('<td><input type="text" name="imp ' +
+                    lastElementIndex + ' placeholder="Сколько? data-val="' + lastElementIndex + '"></input></td>');
+
+                    $('#row_' + lastElementIndex).append('<td><a href="#" data-val="' + lastElementIndex + '" class="deletepicture">Delete</a></td>');
+                    $("#selectorTable").append('</tr>');
+                    removing();
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    if (xmlHttpRequest.readyState == 0 || xmlHttpRequest.status == 0)
+                        return; // it's not really an error
+                    alert(textStatus);
+                }
+            });
+        });
+    });
+</script> 
+}

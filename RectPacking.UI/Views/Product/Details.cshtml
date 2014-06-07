@@ -1,0 +1,64 @@
+﻿@model RectPacking.UI.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Product</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Image.ImageUrl)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Image.ImageUrl)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Width)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Width)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Height)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Height)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.StandardName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.StandardName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FreezeTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FreezeTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ConcreteType.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ConcreteType.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsReady)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsReady)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

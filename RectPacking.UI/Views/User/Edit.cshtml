@@ -1,0 +1,78 @@
+﻿@model RectPacking.UI.Models.User
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>User</legend>
+
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsManager)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsManager)
+            @Html.ValidationMessageFor(model => model.IsManager)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsAdmin)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsAdmin)
+            @Html.ValidationMessageFor(model => model.IsAdmin)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.UserName)
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SaltedPassword)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.SaltedPassword)
+            @Html.ValidationMessageFor(model => model.SaltedPassword)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CreatedAt)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreatedAt)
+            @Html.ValidationMessageFor(model => model.CreatedAt)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Enabled)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Enabled)
+            @Html.ValidationMessageFor(model => model.Enabled)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

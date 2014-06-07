@@ -1,0 +1,61 @@
+﻿@using RectPacking.UI.Models
+@model RectPacking.UI.Models.Order
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Order</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.User.UserName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.UserName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.StartDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.StartDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.EndDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EndDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Client.ClientName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Client.ClientName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Rating)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Rating)
+    </div>
+    
+    <div class="display-label">
+        Продукты
+    </div>
+    @foreach (Product item in ViewBag.tsList)
+    {
+        <div class="display-field">
+            @item.StandardName - количество: @item.ProductSets.Where(ps=>ps.OrderId==Model.Id).Sum(ps=>ps.Quantity)  габариты @item.Width * @item.Height
+        </div>
+    } 
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
