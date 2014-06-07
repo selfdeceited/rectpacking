@@ -12,11 +12,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Services;
+using RectPacking.UI.Models;
+using Frame = RectPacking.Operations.Frame;
 
 namespace RectPacking.UI.Controllers
 {
     public class HomeController : Controller
     {
+        private PackingContext db = new PackingContext();
+
         public ActionResult Index()
         {
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
@@ -108,14 +112,12 @@ namespace RectPacking.UI.Controllers
             return process.JSON.ToString();
         }
 
-        public ActionResult Primitive()
+        public ActionResult FromDb()
         {
+            ViewBag.ContainerId = new SelectList(db.Containers, "Id", "Name");
+            ViewBag.FormsAvailable = db.ProductSets.Sum(ps => ps.Quantity);
             return View();
         }
 
-        public ActionResult Shop()
-        {
-            return View();
-        }
     }
 }

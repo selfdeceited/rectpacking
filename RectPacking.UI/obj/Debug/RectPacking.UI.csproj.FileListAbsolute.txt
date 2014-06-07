@@ -31,7 +31,6 @@ D:\vs\RP\RectPacking.UI\bin\System.Web.WebPages.Deployment.dll
 D:\vs\RP\RectPacking.UI\bin\System.Web.WebPages.dll
 D:\vs\RP\RectPacking.UI\bin\System.Web.WebPages.Razor.dll
 D:\vs\RP\RectPacking.UI\bin\WebGrease.dll
-D:\vs\RP\RectPacking.UI\bin\WebMatrix.Data.dll
 D:\vs\RP\RectPacking.UI\bin\WebMatrix.WebData.dll
 D:\vs\RP\RectPacking.UI\bin\nunit.framework.dll
 D:\vs\RP\RectPacking.UI\bin\Org.Mentalis.Security.Cryptography.dll
@@ -49,7 +48,6 @@ D:\vs\RP\RectPacking.UI\bin\System.Web.Razor.xml
 D:\vs\RP\RectPacking.UI\bin\System.Web.WebPages.xml
 D:\vs\RP\RectPacking.UI\bin\System.Web.WebPages.Deployment.xml
 D:\vs\RP\RectPacking.UI\bin\System.Web.WebPages.Razor.xml
-D:\vs\RP\RectPacking.UI\bin\WebMatrix.Data.xml
 D:\vs\RP\RectPacking.UI\bin\Microsoft.Web.WebPages.OAuth.xml
 D:\vs\RP\RectPacking.UI\bin\WebMatrix.WebData.xml
 D:\vs\RP\RectPacking.UI\bin\DotNetOpenAuth.AspNet.xml
@@ -94,3 +92,5 @@ D:\vs\RP\RectPacking.UI\bin\zh-Hans\System.Spatial.resources.dll
 D:\vs\RP\RectPacking.UI\bin\zh-Hant\System.Spatial.resources.dll
 D:\vs\RP\RectPacking.UI\obj\Debug\RectPacking.UI.dll
 D:\vs\RP\RectPacking.UI\obj\Debug\RectPacking.UI.pdb
+D:\vs\RP\RectPacking.UI\obj\Debug\RectPacking.UI.Migrations.initial.resources
+D:\vs\RP\RectPacking.UI\obj\Debug\RectPacking.UI.csproj.GenerateResource.Cache
