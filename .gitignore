@@ -13,3 +13,4 @@ RectPacking.Tests/obj/
 RectPacking.Model/
 WebUI
 *.orig
+*.cache
